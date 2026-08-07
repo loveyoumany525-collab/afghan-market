@@ -15,6 +15,72 @@
         .filter-item label{display:block;margin-bottom:6px;font-weight:bold;font-size:14px}
         .filter-item input,.filter-item select{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
         .filter-btn{width:100%;padding:12px;background:#2a5298;color:#fff;border:none;border-radius:6px;margin-top:15px;font-size:16px;font-weight:bold;cursor:pointer}
+        .filter-btn:hover{background:#1e3c72}
         .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
         .product{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden}
-        .product img{width:100%;height:200px;
+        .product img{width:100%;height:200px;object-fit:cover}
+        .product-info{padding:15px}
+        .city-tag{background:#27ae60;color:#fff;padding:4px 10px;border-radius:15px;font-size:12px;display:inline-block;margin-bottom:8px}
+        .product h3{margin:5px 0;color:#2a5298}
+        .details{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px;margin:10px 0}
+        .detail-item{background:#eef3ff;padding:8px;border-radius:5px}
+        .price{color:#e74c3c;font-size:20px;font-weight:bold;text-align:left;margin:10px 0}
+        .btn-group{display:flex;gap:8px}
+        .btn{flex:1;padding:10px;border:none;border-radius:5px;color:#fff;font-weight:bold;cursor:pointer}
+        .contact-btn{background:#27ae60}
+        .whatsapp-btn{background:#25D366}
+        .no-result{background:#fff;padding:30px;text-align:center;border-radius:10px;font-size:18px}
+        footer{background:#2a5298;color:#fff;text-align:center;padding:15px;margin-top:30px}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚗 افغان مارکت ماشین</h1>
+        <p>خرید و فروش ماشین در افغانستان</p>
+    </header>
+    
+    <div class="container">
+        <div class="filters">
+            <h3>🔍 فیلتر جستجوی پیشرفته</h3>
+            <div class="filter-row">
+                <!-- 1. برند -->
+                <div class="filter-item">
+                    <label>برند ماشین</label>
+                    <select id="brandFilter">
+                        <option value="all">همه برندها</option>
+                        <option value="تویوتا">تویوتا</option>
+                        <option value="هوندا">هوندا</option>
+                        <option value="لکسوس">لکسوس</option>
+                        <option value="بی ام دبلیو">بی ام دبلیو</option>
+                    </select>
+                </div>
+                <!-- 2. سال -->
+                <div class="filter-item">
+                    <label>از سال</label>
+                    <input type="number" id="minYear" placeholder="2015">
+                </div>
+                <div class="filter-item">
+                    <label>تا سال</label>
+                    <input type="number" id="maxYear" placeholder="2024">
+                </div>
+                <!-- 3. قیمت -->
+                <div class="filter-item">
+                    <label>حداقل قیمت</label>
+                    <input type="number" id="minPrice" placeholder="100000">
+                </div>
+                <div class="filter-item">
+                    <label>حداکثر قیمت</label>
+                    <input type="number" id="maxPrice" placeholder="5000000">
+                </div>
+                <!-- 4. شهر -->
+                <div class="filter-item">
+                    <label>شهر</label>
+                    <select id="cityFilter">
+                        <option value="all">همه شهرها</option>
+                        <option value="کابل">کابل</option>
+                        <option value="مزار شریف">مزار شریف</option>
+                        <option value="هرات">هرات</option>
+                    </select>
+                </div>
+            </div>
+            <button
