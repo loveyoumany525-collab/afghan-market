@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>افغان مارکت - خرید و فروش ماشین</title>
+    <title>افغان مارکت - خرید و فروش ماشین و فرش</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Tahoma; }
         body { background: #f5f5f5; }
         header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 25px; text-align: center; }
-        header h1 { font-size: 2.2em; margin-bottom: 5px; }
-        .container { max-width: 1200px; margin: 30px auto; padding: 20px; }
-        .section-title { text-align: center; font-size: 1.8em; margin-bottom: 25px; color: #1e3c72; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .filters { background: white; padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .filter-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .filter-item label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .filter-item input, .filter-item select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .filter-btn { background: #2a5298; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-size: 1.1em; }
+        .section-title { text-align: center; font-size: 1.8em; margin: 30px 0 20px; color: #1e3c72; }
         .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .product { background: white; border-radius: 12px; box-shadow: 0 3px 15px rgba(0,0,0,0.1); overflow: hidden; transition: 0.3s; }
-        .product:hover { transform: translateY(-5px); }
+        .product { background: white; border-radius: 12px; box-shadow: 0 3px 15px rgba(0,0,0,0.1); overflow: hidden; }
         .product img { width: 100%; height: 220px; object-fit: cover; }
         .product-info { padding: 15px; }
+        .city-tag { background: #27ae60; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.85em; display: inline-block; margin-bottom: 8px; }
         .product h3 { color: #1e3c72; font-size: 1.3em; margin-bottom: 10px; }
         .details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; font-size: 0.9em; }
         .detail-item { background: #f0f4ff; padding: 8px; border-radius: 6px; }
         .detail-label { color: #666; font-size: 0.85em; }
         .detail-value { font-weight: bold; color: #333; }
-        .price { font-size: 1.5em; color: #e74c3c; font-weight: bold; text-align: left; margin-top: 10px; }
-        .contact-btn { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-top: 10px; }
+        .price { font-size: 1.5em; color: #e74c3c; font-weight: bold; text-align: left; margin: 10px 0; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .contact-btn { background: #27ae60; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1em; cursor: pointer; }
+        .whatsapp-btn { background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1em; cursor: pointer; }
         footer { background: #1e3c72; color: white; text-align: center; padding: 20px; margin-top: 50px; }
     </style>
 </head>
@@ -33,34 +39,73 @@
     </header>
     
     <div class="container">
-        <h2 class="section-title">ماشین های ویژه برای فروش</h2>
-        <div class="products">
+        <div class="filters">
+            <h3 style="margin-bottom: 15px;">🔍 فیلتر جستجو</h3>
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>شهر</label>
+                    <select id="cityFilter">
+                        <option value="all">همه شهرها</option>
+                        <option value="کابل">کابل</option>
+                        <option value="مزار شریف">مزار شریف</option>
+                        <option value="هرات">هرات</option>
+                        <option value="قندهار">قندهار</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>حداقل قیمت افغانی</label>
+                    <input type="number" id="minPrice" placeholder="10000">
+                </div>
+                <div class="filter-item">
+                    <label>حداکثر قیمت افغانی</label>
+                    <input type="number" id="maxPrice" placeholder="1000000">
+                </div>
+                <div class="filter-item">
+                    <label>حداکثر کیلومتر</label>
+                    <input type="number" id="maxKm" placeholder="100000">
+                </div>
+            </div>
+            <button class="filter-btn" onclick="filterProducts()">جستجو</button>
+        </div>
+
+        <h2 class="section-title">ماشین های ویژه</h2>
+        <div class="products" id="productsList">
             
-            <div class="product">
+            <div class="product" data-city="کابل" data-price="500000" data-km="45000">
+                <span class="city-tag">📍 کابل</span>
                 <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600" alt="Toyota">
                 <div class="product-info">
                     <h3>تویوتا کرولا</h3>
                     <div class="details">
-                        <div class="detail-item">
-                            <div class="detail-label">سال ساخت</div>
-                            <div class="detail-value">2020</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">کیلومتر</div>
-                            <div class="detail-value">45,000 km</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">گیربکس</div>
-                            <div class="detail-value">اتوماتیک</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">رنگ</div>
-                            <div class="detail-value">سفید</div>
-                        </div>
+                        <div class="detail-item"><div class="detail-label">سال</div><div class="detail-value">2020</div></div>
+                        <div class="detail-item"><div class="detail-label">کیلومتر</div><div class="detail-value">45,000 km</div></div>
+                        <div class="detail-item"><div class="detail-label">گیربکس</div><div class="detail-value">اتوماتیک</div></div>
+                        <div class="detail-item"><div class="detail-label">رنگ</div><div class="detail-value">سفید</div></div>
                     </div>
-                    <p><b>وضعیت:</b> بدون رنگ، سالم، 4 سیلندر، کولر روشن</p>
                     <div class="price">500,000 افغانی</div>
-                    <button class="contact-btn">📞 تماس برای خرید</button>
+                    <div class="btn-group">
+                        <button class="contact-btn">📞 تماس</button>
+                        <button class="whatsapp-btn" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product" data-city="مزار شریف" data-price="420000" data-km="80000">
+                <span class="city-tag">📍 مزار شریف</span>
+                <img src="https://images.unsplash.com/photo-1549924231-16c5752f55f1?w=600" alt="Honda">
+                <div class="product-info">
+                    <h3>هوندا سیویک</h3>
+                    <div class="details">
+                        <div class="detail-item"><div class="detail-label">سال</div><div class="detail-value">2018</div></div>
+                        <div class="detail-item"><div class="detail-label">کیلومتر</div><div class="detail-value">80,000 km</div></div>
+                        <div class="detail-item"><div class="detail-label">گیربکس</div><div class="detail-value">دستی</div></div>
+                        <div class="detail-item"><div class="detail-label">رنگ</div><div class="detail-value">مشکی</div></div>
+                    </div>
+                    <div class="price">420,000 افغانی</div>
+                    <div class="btn-group">
+                        <button class="contact-btn">📞 تماس</button>
+                        <button class="whatsapp-btn" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
+                    </div>
                 </div>
             </div>
 
@@ -68,7 +113,30 @@
     </div>
 
     <footer>
-        <p>© 2026 افغان مارکت - برای ثبت آگهی با ما تماس بگیرید ❤️</p>
+        <p>© 2026 افغان مارکت ❤️</p>
     </footer>
+
+    <script>
+        function filterProducts() {
+            let city = document.getElementById('cityFilter').value;
+            let minPrice = document.getElementById('minPrice').value || 0;
+            let maxPrice = document.getElementById('maxPrice').value || 9999;
+            let maxKm = document.getElementById('maxKm').value || 999;
+            
+            let products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                let pCity = product.getAttribute('data-city');
+                let pPrice = parseInt(product.getAttribute('data-price'));
+                let pKm = parseInt(product.getAttribute('data-km'));
+                
+                let show = true;
+                if(city !== 'all' && pCity !== city) show = false;
+                if(pPrice < minPrice || pPrice > maxPrice) show = false;
+                if(pKm > maxKm) show = false;
+                
+                product.style.display = show ? 'block' : 'none';
+            });
+        }
+    </script>
 </body>
 </html>
