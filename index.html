@@ -6,80 +6,170 @@
 <title>افغان مارکت ماشین</title>
 <style>
 body{font-family:Tahoma;background:#f0f2f5;margin:0;padding:0}
-header{background:#2a5298;color:#fff;padding:15px;text-align:center}
+header{background:#2a5298;color:#fff;padding:15px;display:flex;justify-content:space-between;align-items:center}
+.filter-btn-head{background:#fff;color:#2a5298;border:none;padding:8px 15px;border-radius:5px;font-weight:bold}
 .container{max-width:1200px;margin:15px auto;padding:10px}
-.filters{background:#fff;padding:15px;border-radius:10px;margin-bottom:15px}
-.filter-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
-.filter-item label{display:block;margin-bottom:5px;font-weight:bold}
-.filter-item select, .filter-item input{width:100%;padding:8px;border:1px solid #ccc;border-radius:5px}
-.btn-search{width:100%;padding:12px;background:#2a5298;color:#fff;border:none;border-radius:5px;margin-top:10px;font-size:16px}
+
+/* پاپ آپ فیلتر */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000}
+.modal-content{background:#fff;width:100%;max-width:500px;margin:0 auto;height:100%;overflow-y:auto;padding:15px}
+.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:10px}
+.filter-section{margin:15px 0;border-bottom:1px solid #eee;padding-bottom:15px}
+.filter-section h4{margin:0 0 10px 0;color:#2a5298}
+.city-tags{display:flex;gap:8px;flex-wrap:wrap}
+.city-tag-btn{padding:8px 12px;border:1px solid #ccc;border-radius:20px;background:#fff;cursor:pointer}
+.city-tag-btn.active{background:#2a5298;color:#fff;border-color:#2a5298}
+.price-inputs{display:flex;gap:10px;align-items:center}
+.price-inputs input{width:100%;padding:8px;border:1px solid #ccc;border-radius:5px}
+.quick-btns{display:flex;gap:8px;margin-top:10px}
+.quick-btn{flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;background:#f8f8f8;text-align:center;cursor:pointer}
+.modal-footer{display:flex;gap:10px;position:sticky;bottom:0;background:#fff;padding:10px 0}
+.btn-clear{flex:1;padding:12px;border:1px solid #ccc;background:#fff;border-radius:5px}
+.btn-show{flex:2;padding:12px;background:#2a5298;color:#fff;border:none;border-radius:5px;font-weight:bold}
+
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
 .product{background:#fff;border-radius:10px;padding:10px}
 .product img{width:100%;height:180px;object-fit:cover;border-radius:8px}
 .price{color:red;font-weight:bold;font-size:18px}
-@media(max-width:700px){.filter-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<header><h1>🚗 افغان مارکت ماشین</h1></header>
+<header>
+<h1>🚗 افغان مارکت</h1>
+<button class="filter-btn-head" onclick="openModal()">🔍 فیلتر</button>
+</header>
 
 <div class="container">
-<div class="filters">
-<h3>🔍 فیلتر جستجو</h3>
-<div class="filter-grid">
-<div class="filter-item">
-<label>برند</label>
-<select id="brand"><option value="all">همه</option><option>تویوتا</option><option>هوندا</option><option>لکسوس</option></select>
-</div>
-<div class="filter-item">
-<label>از سال</label>
-<input type="number" id="minYear" placeholder="2015">
-</div>
-<div class="filter-item">
-<label>تا سال</label>
-<input type="number" id="maxYear" placeholder="2024">
-</div>
-<div class="filter-item">
-<label>شهر</label>
-<select id="city"><option value="all">همه</option><option>کابل</option><option>مزار</option><option>هرات</option></select>
-</div>
-</div>
-<button class="btn-search" onclick="filter()">جستجو</button>
-</div>
-
 <div class="products" id="list">
-<div class="product" data-brand="تویوتا" data-year="2020" data-city="کابل" data-price="500000">
+<div class="product" data-brand="تویوتا" data-year="2020" data-city="کابل" data-price="500000" data-km="45000">
 <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600">
 <h3>تویوتا کرولا</h3>
-<p>سال: 2020 | شهر: کابل</p>
+<p>سال: 2020 | شهر: کابل | 45,000 km</p>
 <p class="price">500,000 افغانی</p>
 <button onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
 </div>
-
-<div class="product" data-brand="هوندا" data-year="2018" data-city="مزار" data-price="420000">
+<div class="product" data-brand="هوندا" data-year="2018" data-city="مزار" data-price="420000" data-km="80000">
 <img src="https://images.unsplash.com/photo-1549924231-16c5752f55f1?w=600">
 <h3>هوندا سیویک</h3>
-<p>سال: 2018 | شهر: مزار</p>
+<p>سال: 2018 | شهر: مزار | 80,000 km</p>
 <p class="price">420,000 افغانی</p>
 <button onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
 </div>
 </div>
 </div>
 
+<!-- پاپ آپ فیلتر -->
+<div class="modal" id="filterModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>Filters</h3>
+<span onclick="closeModal()" style="font-size:24px;cursor:pointer">×</span>
+</div>
+
+<div class="filter-section">
+<h4>Make & Model</h4>
+<select id="brand" style="width:100%;padding:10px">
+<option value="all">Show all makes</option>
+<option>تویوتا</option>
+<option>هوندا</option>
+<option>لکسوس</option>
+</select>
+</div>
+
+<div class="filter-section">
+<h4>City</h4>
+<div class="city-tags">
+<button class="city-tag-btn" onclick="selectCity(this,'کابل')">کابل</button>
+<button class="city-tag-btn" onclick="selectCity(this,'مزار')">مزار</button>
+<button class="city-tag-btn" onclick="selectCity(this,'هرات')">هرات</button>
+</div>
+</div>
+
+<div class="filter-section">
+<h4>Price Range - افغانی</h4>
+<div class="price-inputs">
+<input type="number" id="minPrice" placeholder="1,000" value="0">
+<span>to</span>
+<input type="number" id="maxPrice" placeholder="5,000,000" value="5000000">
+</div>
+<div class="quick-btns">
+<div class="quick-btn" onclick="setPrice(0,300000)">Under 300K</div>
+<div class="quick-btn" onclick="setPrice(0,500000)">Under 500K</div>
+<div class="quick-btn" onclick="setPrice(0,700000)">Under 700K</div>
+</div>
+</div>
+
+<div class="filter-section">
+<h4>Year</h4>
+<div class="price-inputs">
+<input type="number" id="minYear" placeholder="2000" value="2000">
+<span>to</span>
+<input type="number" id="maxYear" placeholder="2024" value="2024">
+</div>
+<div class="quick-btns">
+<div class="quick-btn" onclick="setYear(2022,2024)">2022-2024</div>
+<div class="quick-btn" onclick="setYear(2017,2021)">2017-2021</div>
+<div class="quick-btn" onclick="setYear(2012,2016)">2012-2016</div>
+</div>
+</div>
+
+<div class="filter-section">
+<h4>Mileage - KM</h4>
+<div class="price-inputs">
+<input type="number" id="minKm" placeholder="0" value="0">
+<span>to</span>
+<input type="number" id="maxKm" placeholder="300000" value="300000">
+</div>
+</div>
+
+<div class="modal-footer">
+<button class="btn-clear" onclick="clearAll()">Clear all</button>
+<button class="btn-show" onclick="applyFilter()">Show Ads</button>
+</div>
+
+</div>
+</div>
+
 <script>
-function filter(){
+let selectedCity = 'all';
+function openModal(){document.getElementById('filterModal').style.display='block'}
+function closeModal(){document.getElementById('filterModal').style.display='none'}
+function selectCity(btn,city){
+document.querySelectorAll('.city-tag-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+selectedCity = city;
+}
+function setPrice(min,max){document.getElementById('minPrice').value=min;document.getElementById('maxPrice').value=max}
+function setYear(min,max){document.getElementById('minYear').value=min;document.getElementById('maxYear').value=max}
+function clearAll(){
+selectedCity='all';
+document.querySelectorAll('.city-tag-btn').forEach(b=>b.classList.remove('active'));
+document.getElementById('brand').value='all';
+document.getElementById('minPrice').value=0;document.getElementById('maxPrice').value=5000000;
+document.getElementById('minYear').value=2000;document.getElementById('maxYear').value=2024;
+document.getElementById('minKm').value=0;document.getElementById('maxKm').value=300000;
+}
+function applyFilter(){
 let b=document.getElementById('brand').value;
-let minY=parseInt(document.getElementById('minYear').value)||1900;
-let maxY=parseInt(document.getElementById('maxYear').value)||3000;
-let c=document.getElementById('city').value;
+let minP=parseInt(document.getElementById('minPrice').value);
+let maxP=parseInt(document.getElementById('maxPrice').value);
+let minY=parseInt(document.getElementById('minYear').value);
+let maxY=parseInt(document.getElementById('maxYear').value);
+let minK=parseInt(document.getElementById('minKm').value);
+let maxK=parseInt(document.getElementById('maxKm').value);
+
 document.querySelectorAll('.product').forEach(p=>{
-let pb=p.dataset.brand; let py=parseInt(p.dataset.year); let pc=p.dataset.city;
+let pb=p.dataset.brand; let py=parseInt(p.dataset.year); 
+let pc=p.dataset.city; let pp=parseInt(p.dataset.price); let pk=parseInt(p.dataset.km);
 let show=true;
 if(b!='all'&&pb!=b)show=false;
+if(selectedCity!='all'&&pc!=selectedCity)show=false;
+if(pp<minP||pp>maxP)show=false;
 if(py<minY||py>maxY)show=false;
-if(c!='all'&&pc!=c)show=false;
+if(pk<minK||pk>maxK)show=false;
 p.style.display=show?'block':'none';
 });
+closeModal();
 }
 </script>
 </body>
