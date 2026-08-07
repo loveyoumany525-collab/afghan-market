@@ -7,47 +7,43 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tahoma;background:#f0f2f5}
-header{background:#2a5298;color:#fff;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:999}
-.lang-select{padding:6px;border-radius:5px;border:none}
+header{background:#2a5298;color:#fff;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:999}
+.lang-select{padding:6px;border-radius:5px;border:none;font-size:14px}
 #filterBtn{background:#fff;color:#2a5298;border:none;padding:8px 15px;border-radius:5px;font-weight:bold;cursor:pointer}
 .container{max-width:1200px;margin:15px auto;padding:10px}
 
-/* پاپ آپ */
 #filterModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000}
 #filterModal.active{display:block}
 .modal-content{background:#fff;width:100%;max-width:500px;margin:0 auto;height:100%;overflow-y:auto;padding:15px}
-.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:10px;margin-bottom:15px}
-.filter-section{margin-bottom:20px}
-.filter-section h4{margin-bottom:10px;color:#2a5298}
-.city-tags{display:flex;gap:8px;flex-wrap:wrap}
-.city-tag-btn{padding:8px 14px;border:1px solid #ccc;border-radius:20px;background:#fff;cursor:pointer}
-.city-tag-btn.active{background:#2a5298;color:#fff}
+.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding-bottom:12px;margin-bottom:15px}
+.reset-link{color:#e74c3c;font-weight:bold;cursor:pointer;font-size:14px}
 
-/* نوار رنج */
-.range-box{margin:25px 0}
-.range-values{display:flex;justify-content:space-between;font-weight:bold;color:#2a5298;margin-bottom:8px}
-.range-slider{position:relative;height:6px;background:#ddd;border-radius:5px}
-.range-progress{position:absolute;height:6px;background:#2a5298;border-radius:5px}
-.range-inputs input{position:absolute;width:100%;height:6px;top:-6px;background:transparent;pointer-events:none;appearance:none}
-.range-inputs input::-webkit-slider-thumb{pointer-events:auto;width:20px;height:20px;border-radius:50%;background:#2a5298;appearance:none;border:3px solid #fff}
+.filter-section{margin-bottom:18px}
+.filter-section h4{margin-bottom:8px;color:#333;font-size:14px;font-weight:bold}
+.filter-select{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px;background:#fff}
 
-.quick-btns{display:flex;gap:8px;margin-top:10px}
-.quick-btn{flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;background:#f8f8f8;cursor:pointer;text-align:center;font-size:12px}
-.modal-footer{display:flex;gap:10px;margin-top:20px;padding-top:15px;border-top:1px solid #ddd;position:sticky;bottom:0;background:#fff}
-.btn-clear{flex:1;padding:12px;border:1px solid #ccc;background:#fff;border-radius:5px;font-weight:bold}
-.btn-show{flex:2;padding:12px;background:#2a5298;color:#fff;border:none;border-radius:5px;font-weight:bold}
+.price-range{display:flex;gap:10px;margin-bottom:10px}
+.price-range input{flex:1;padding:10px;border:1px solid #ddd;border-radius:8px}
+
+.verified-toggle{display:flex;gap:10px}
+.verified-btn{flex:1;padding:12px;border:2px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-weight:bold}
+.verified-btn.active{border-color:#2a5298;background:#eaf1ff;color:#2a5298}
+
+.modal-footer{display:flex;gap:10px;margin-top:20px;padding:15px 0;border-top:1px solid #eee;position:sticky;bottom:0;background:#fff}
+.btn-show{width:100%;padding:14px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer}
 
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
-.product{background:#fff;border-radius:10px;padding:12px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.product{background:#fff;border-radius:10px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
 .product img{width:100%;height:180px;object-fit:cover;border-radius:8px}
 .price{color:#e74c3c;font-weight:bold;font-size:18px;margin:8px 0}
-.btn-wa{width:100%;padding:10px;background:#25D366;color:#fff;border:none;border-radius:5px;font-weight:bold}
+.badge{font-size:11px;background:#2a5298;color:#fff;padding:3px 8px;border-radius:4px;margin-left:5px}
+.btn-wa{width:100%;padding:10px;background:#25D366;color:#fff;border:none;border-radius:5px;font-weight:bold;margin-top:8px}
 </style>
 </head>
 <body>
 <header>
 <h1 id="headerTitle" style="font-size:18px">🚗 افغان مارکت</h1>
-<div>
+<div style="display:flex;gap:8px">
 <select class="lang-select" id="lang">
 <option value="fa">فارسی</option>
 <option value="en">English</option>
@@ -59,41 +55,112 @@ header{background:#2a5298;color:#fff;padding:10px 15px;display:flex;justify-cont
 
 <div class="container">
 <div class="products" id="list">
-<div class="product" data-brand="تویوتا" data-year="2020" data-city="کابل" data-price="500000">
+<div class="product" data-brand="تویوتا" data-model="کرولا" data-year="2020" data-city="کابل" data-price="500000" data-type="سدان" data-verified="yes">
 <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80">
-<h3>تویوتا کرولا</h3>
-<p><span class="txt-year">سال</span>: 2020 | <span class="txt-city">شهر</span>: کابل</p>
-<p class="price">500,000 <span class="txt-currency">افغانی</span></p>
+<h3><span class="badge">تایید شده</span>تویوتا کرولا</h3>
+<p>سال: 2020 | شهر: کابل | سدان</p>
+<p class="price">500,000 افغانی</p>
 <button class="btn-wa" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
 </div>
 
-<div class="product" data-brand="هوندا" data-year="2018" data-city="مزار" data-price="420000">
+<div class="product" data-brand="مرسدس" data-model="AMG GT" data-year="2018" data-city="مزار" data-price="420000" data-type="کوپه" data-verified="no">
 <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80">
-<h3>هوندا سیویک</h3>
-<p><span class="txt-year">سال</span>: 2018 | <span class="txt-city">شهر</span>: مزار</p>
-<p class="price">420,000 <span class="txt-currency">افغانی</span></p>
+<h3>مرسدس AMG GT</h3>
+<p>سال: 2018 | شهر: مزار | کوپه</p>
+<p class="price">420,000 افغانی</p>
+<button class="btn-wa" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
+</div>
+
+<div class="product" data-brand="لکسوس" data-model="RX350" data-year="2021" data-city="هرات" data-price="850000" data-type="شاسی بلند" data-verified="yes">
+<img src="https://images.unsplash.com/photo-1494972681923-2a4f6feae9d9?w=600&q=80">
+<h3><span class="badge">تایید شده</span>لکسوس RX350</h3>
+<p>سال: 2021 | شهر: هرات | شاسی بلند</p>
+<p class="price">850,000 افغانی</p>
 <button class="btn-wa" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
 </div>
 </div>
 </div>
 
-<!-- پاپ آپ -->
+<!-- پاپ آپ فیلتر -->
 <div id="filterModal">
 <div class="modal-content">
 <div class="modal-header">
-<h3 id="filterTitle">فیلترها</h3>
-<span id="closeBtn" style="font-size:28px;cursor:pointer">×</span>
+<h3>فیلتر</h3>
+<span class="reset-link" onclick="resetFilters()">Reset Filters</span>
 </div>
 
 <div class="filter-section">
-<h4 id="brandTxt">برند ماشین</h4>
-<select id="brand" style="width:100%;padding:10px">
-<option value="all" id="allMakes">همه برندها</option>
-<option>تویوتا</option><option>هوندا</option><option>لکسوس</option>
+<h4>ولایت / Emirates</h4>
+<select class="filter-select" id="city">
+<option value="all">انتخاب کنید</option>
+<option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option>
 </select>
 </div>
 
 <div class="filter-section">
-<h4 id="cityTxt">شهر</h4>
-<div class="city-tags">
-<button type="button" class
+<h4>برند ماشین / Car Brand</h4>
+<select class="filter-select" id="brand" onchange="updateModel()">
+<option value="all">انتخاب کنید</option>
+<option value="تویوتا">تویوتا</option>
+<option value="هوندا">هوندا</option>
+<option value="مرسدس">مرسدس بنز</option>
+<option value="لکسوس">لکسوس</option>
+</select>
+</div>
+
+<div class="filter-section">
+<h4>مدل ماشین / Car Model</h4>
+<select class="filter-select" id="model">
+<option value="all">انتخاب کنید</option>
+</select>
+</div>
+
+<div class="filter-section">
+<h4>سال / Year</h4>
+<select class="filter-select" id="year">
+<option value="all">انتخاب کنید</option>
+<option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
+</select>
+</div>
+
+<div class="filter-section">
+<h4>نوع خودرو / Vehicle Type</h4>
+<select class="filter-select" id="type">
+<option value="all">انتخاب کنید</option>
+<option>سدان</option><option>شاسی بلند</option><option>کوپه</option><option>پیکاپ</option>
+</select>
+</div>
+
+<div class="filter-section">
+<h4>قیمت / Price - AFN</h4>
+<div class="price-range">
+<input type="number" id="minPrice" placeholder="کمترین" value="0">
+<input type="number" id="maxPrice" placeholder="بیشترین" value="5000000">
+</div>
+</div>
+
+<div class="filter-section">
+<h4>کاربر</h4>
+<div class="verified-toggle">
+<button type="button" class="verified-btn active" id="vAll" onclick="setVerified('all')">همه</button>
+<button type="button" class="verified-btn" id="vYes" onclick="setVerified('yes')">✓ تایید شده</button>
+</div>
+</div>
+
+<div class="modal-footer">
+<button class="btn-show" onclick="applyFilter()" id="showBtn">نمایش نتایج</button>
+</div>
+</div>
+</div>
+
+<script>
+let selectedVerified = 'all';
+const modal = document.getElementById('filterModal');
+document.getElementById('filterBtn').onclick = ()=> { modal.classList.add('active'); loadFilters(); }
+modal.onclick = (e)=>{ if(e.target==modal) modal.classList.remove('active') };
+
+// مدل ها
+const models = {
+تویوتا: ["کرولا", "لندکروزر", "کمری", "پریوس"],
+هوندا: ["سیویک", "اکورد", "CR-V"],
+مر
