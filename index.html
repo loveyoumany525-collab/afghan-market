@@ -1,4 +1,51 @@
-
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>افغان مارکت ماشین</title>
+    <style>
+        body{font-family:Tahoma,Arial;background:#f0f2f5;margin:0;padding:0}
+        header{background:#2a5298;color:#fff;padding:20px;text-align:center}
+        header h1{margin:0;font-size:24px}
+        .container{max-width:1000px;margin:15px auto;padding:10px}
+        .filters{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,.1);margin-bottom:20px}
+        .filters h3{margin-top:0;color:#2a5298}
+        .filter-row{display:flex;flex-wrap:wrap;gap:10px}
+        .filter-item{flex:1 1 200px}
+        .filter-item label{display:block;margin-bottom:5px;font-weight:bold}
+        .filter-item input,.filter-item select{width:100%;padding:8px;border:1px solid #ccc;border-radius:5px}
+        .filter-btn{width:100%;padding:10px;background:#2a5298;color:#fff;border:none;border-radius:5px;margin-top:10px;font-size:16px;cursor:pointer}
+        .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
+        .product{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden}
+        .product img{width:100%;height:200px;object-fit:cover}
+        .product-info{padding:15px}
+        .city-tag{background:#27ae60;color:#fff;padding:4px 10px;border-radius:15px;font-size:12px;display:inline-block;margin-bottom:8px}
+        .product h3{margin:5px 0;color:#2a5298}
+        .details{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:14px;margin:10px 0}
+        .detail-item{background:#eef3ff;padding:8px;border-radius:5px}
+        .price{color:#e74c3c;font-size:20px;font-weight:bold;text-align:left;margin:10px 0}
+        .btn-group{display:flex;gap:8px}
+        .btn{flex:1;padding:10px;border:none;border-radius:5px;color:#fff;font-weight:bold;cursor:pointer}
+        .contact-btn{background:#27ae60}
+        .whatsapp-btn{background:#25D366}
+        .no-result{background:#fff;padding:30px;text-align:center;border-radius:10px}
+        footer{background:#2a5298;color:#fff;text-align:center;padding:15px;margin-top:30px}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🚗 افغان مارکت ماشین</h1>
+        <p>خرید و فروش ماشین در افغانستان</p>
+    </header>
+    
+    <div class="container">
+        <div class="filters">
+            <h3>🔍 فیلتر جستجو</h3>
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>شهر</label>
+                    <select id="cityFilter">
                         <option value="all">همه شهرها</option>
                         <option value="کابل">کابل</option>
                         <option value="مزار شریف">مزار شریف</option>
@@ -22,7 +69,7 @@
             <button class="filter-btn" onclick="filterProducts()">جستجو</button>
         </div>
 
-        <h2 class="section-title">ماشین های ویژه</h2>
+        <h2 style="text-align:center;color:#2a5298">ماشین های موجود</h2>
         <div class="products" id="productsList">
             
             <div class="product" data-city="کابل" data-price="500000" data-km="45000">
@@ -31,8 +78,20 @@
                 <div class="product-info">
                     <h3>تویوتا کرولا</h3>
                     <div class="details">
-                        <div class="detail-item"><div class="detail-label">سال</div><div class="detail-value">2020</div></div>
-                        <div class="detail-item"><div class="detail-label">کیلومتر</div><div class="detail-value">45,000 km</div></div>
-                        <div class="detail-item"><div class="detail-label">گیربکس</div><div class="detail-value">اتوماتیک</div></div>
-                        <div class="detail-item"><div class="detail-label">رنگ</div><div class="detail-value">سفید</div></div>
-       
+                        <div class="detail-item"><b>سال:</b> 2020</div>
+                        <div class="detail-item"><b>کیلومتر:</b> 45,000 km</div>
+                        <div class="detail-item"><b>گیربکس:</b> اتوماتیک</div>
+                        <div class="detail-item"><b>رنگ:</b> سفید</div>
+                    </div>
+                    <p><b>وضعیت:</b> بدون رنگ، کولر روشن</p>
+                    <div class="price">500,000 افغانی</div>
+                    <div class="btn-group">
+                        <button class="btn contact-btn" onclick="alert('شماره: 00971561854027')">📞 تماس</button>
+                        <button class="btn whatsapp-btn" onclick="window.open('https://wa.me/971561854027?text=سلام درباره تویوتا کرولا سوال داشتم')">واتساپ</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product" data-city="مزار شریف" data-price="420000" data-km="80000">
+                <span class="city-tag">📍 مزار شریف</span>
+                <img src="https://images.unsplash.com/photo-1549924231-16c5752f55f1?w=600
