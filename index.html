@@ -3,99 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مارکت افغان - خرید و فروش ماشین</title>
+<title>مارکت افغان - Afghan Market</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma;background:#f0f2f5}
-header{background:#2a5298;color:#fff;padding:15px;text-align:center}
-header h1{margin-bottom:10px}
-.btn{background:#27ae60;color:white;padding:12px 25px;border:none;border-radius:8px;cursor:pointer;font-size:16px;font-weight:bold}
-.btn:hover{background:#219a52}
-.container{max-width:1200px;margin:20px auto;padding:10px}
-#formBox{background:white;padding:20px;border-radius:10px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1);display:none}
-#formBox input,#formBox textarea{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:5px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
-.card{background:white;padding:15px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.card img{width:100%;height:200px;object-fit:cover;border-radius:8px;margin-bottom:10px}
-.card h3{color:#2a5298;margin-bottom:8px}
-.info{font-size:14px;color:#555;margin:5px 0}
-.whatsapp{background:#25D366;color:white;padding:10px;border:none;border-radius:8px;width:100%;cursor:pointer;font-size:16px;margin-top:10px}
-.whatsapp:hover{background:#1ebe5c}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Tahoma}
+body{background:#f5f5f5;padding-bottom:80px}
+.header{background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;padding:15px}
+.searchBox{margin:10px 0}
+.searchBox input{width:100%;padding:12px;border-radius:10px;border:none;font-size:16px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+.btn{background:#fff;color:#2a5298;padding:12px;border-radius:10px;text-align:center;font-weight:bold;cursor:pointer}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}
+.cat{background:#fff;padding:10px;border-radius:10px;text-align:center}
+.adCard{background:#fff;margin:10px;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.adCard img{width:100%;height:200px;object-fit:cover}
+.adInfo{padding:12px}
+.price{color:#27ae60;font-size:20px;font-weight:bold}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btnCall{background:#2a5298;color:#fff;padding:10px;border:none;border-radius:8px}
+.btnWa{background:#25D366;color:#fff;padding:10px;border:none;border-radius:8px}
+.bottomNav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:10px;box-shadow:0 -2px 10px rgba(0,0,0,0.1)}
+.navItem{text-align:center;font-size:12px;color:#555}
 </style>
 </head>
 <body>
-<header>
-<h1>مارکت افغان - Afghan Market</h1>
-<button class="btn" onclick="document.getElementById('formBox').style.display='block'">+ ثبت آگهی رایگان ماشین</button>
-</header>
 
-<div class="container">
-<!-- فرم ثبت آگهی -->
-<div id="formBox">
-<h2>ثبت آگهی جدید</h2>
-<input type="text" id="brand" placeholder="برند ماشین: مثلا تویوتا">
-<input type="text" id="model" placeholder="مدل ماشین: مثلا کرولا">
-<input type="number" id="year" placeholder="سال ساخت: مثلا 2020">
-<input type="number" id="km" placeholder="کارکرد: مثلا 50000 کیلومتر">
-<input type="number" id="price" placeholder="قیمت به افغانی: مثلا 800000">
-<input type="text" id="location" placeholder="شهر: مثلا کابل">
-<input type="tel" id="whatsapp" placeholder="شماره واتساپ: 93xxxxxxxxx">
-<textarea id="desc" placeholder="توضیحات: رنگ، وضعیت، آپشن ها..."></textarea>
-<input type="text" id="img" placeholder="لینک عکس ماشین: از گوگل کپی کن">
-<button class="btn" onclick="addAd()">ثبت آگهی</button>
-<button class="btn" style="background:#888" onclick="document.getElementById('formBox').style.display='none'">بستن</button>
+<div class="header">
+<h2>مارکت افغان</h2>
+<div class="searchBox">
+<input type="text" placeholder="دنبال چه ماشینی میگردی؟ برند، مدل...">
+</div>
+<div class="btns">
+<div class="btn" onclick="alert('صفحه خرید')">خرید ماشین</div>
+<div class="btn" onclick="document.getElementById('sellForm').style.display='block'">فروش ماشین</div>
+</div>
 </div>
 
-<!-- جایی که آگهی ها میان -->
-<div class="grid" id="adsList"></div>
+<div style="padding:10px">
+<h3>دسته بندی</h3>
+<div class="categories">
+<div class="cat">SUV</div><div class="cat">Sedan</div><div class="cat">Pickup</div>
+<div class="cat">Hatchback</div><div class="cat">Coupe</div><div class="cat">Van</div>
+</div>
+
+<h3>آخرین آگهی ها</h3>
+<div id="adsList"></div>
+</div>
+
+<!-- فرم فروش -->
+<div id="sellForm" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:99;padding:15px;overflow:auto">
+<h2>ثبت آگهی فروش</h2>
+<input placeholder="برند"><input placeholder="مدل"><input placeholder="سال"><input placeholder="قیمت">
+<input placeholder="کارکرد"><input placeholder="شهر"><input placeholder="شماره واتساپ با 93">
+<button onclick="alert('ثبت شد')">ثبت آگهی</button>
+<button onclick="document.getElementById('sellForm').style.display='none'">بستن</button>
+</div>
+
+<!-- منو پایین -->
+<div class="bottomNav">
+<div class="navItem">🏠<br>Home</div>
+<div class="navItem">🚗<br>Buy Car</div>
+<div class="navItem">➕<br>Sell</div>
+<div class="navItem">⚙️<br>Services</div>
+<div class="navItem">👤<br>Profile</div>
 </div>
 
 <script>
-// آگهی های نمونه
-let ads = [
-{brand:"تویوتا",model:"کرولا",year:2020,km:60000,price:800000,location:"کابل",whatsapp:"93700000000",desc:"بدون رنگ، گیربکس اتومات",img:"https://images.unsplash.com/photo-1542362567-b07e3ded8a6b?w=400"}
-];
-
-// نمایش آگهی ها
+let ads = [{
+brand:"Mercedes",model:"A-Class",year:2024,km:57000,price:114999,
+location:"کابل",fuel:"بنزین",gear:"اتومات",img:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600",wa:"93701234567"
+}];
 function showAds(){
-document.getElementById('adsList').innerHTML = '';
-ads.forEach(ad=>{
-let card = `
-<div class="card">
-<img src="${ad.img}" onerror="this.src='https://via.placeholder.com/300x200'">
-<h3>${ad.brand} ${ad.model} - ${ad.year}</h3>
-<div class="info">💰 قیمت: ${ad.price.toLocaleString()} افغانی</div>
-<div class="info">🚗 کارکرد: ${ad.km.toLocaleString()} کیلومتر</div>
-<div class="info">📍 شهر: ${ad.location}</div>
-<div class="info">📝 ${ad.desc}</div>
-<button class="whatsapp" onclick="window.open('https://wa.me/${ad.whatsapp}','_blank')">تماس در واتساپ</button>
+document.getElementById('adsList').innerHTML = ads.map(ad=>`
+<div class="adCard">
+<img src="${ad.img}">
+<div class="adInfo">
+<div class="price">${ad.price.toLocaleString()} افغانی</div>
+<div><b>${ad.brand} ${ad.model} ${ad.year}</b></div>
+<div>📅 ${ad.year} | 🚗 ${ad.km.toLocaleString()} KM | ⛽ ${ad.fuel} | ⚙️ ${ad.gear}</div>
+<div>📍 ${ad.location}</div>
+<div class="actions">
+<button class="btnCall">تماس</button>
+<button class="btnWa" onclick="window.open('https://wa.me/${ad.wa}')">واتساپ</button>
 </div>
-`;
-document.getElementById('adsList').innerHTML += card;
-})
+</div>
+</div>
+`).join('')
 }
 showAds();
-
-// اضافه کردن آگهی جدید
-function addAd(){
-let newAd = {
-brand:document.getElementById('brand').value,
-model:document.getElementById('model').value,
-year:document.getElementById('year').value,
-km:document.getElementById('km').value,
-price:document.getElementById('price').value,
-location:document.getElementById('location').value,
-whatsapp:document.getElementById('whatsapp').value,
-desc:document.getElementById('desc').value,
-img:document.getElementById('img').value
-}
-ads.unshift(newAd);
-showAds();
-document.getElementById('formBox').style.display='none';
-// پاک کردن فرم
-document.querySelectorAll('#formBox input, #formBox textarea').forEach(i=>i.value='')
-alert('آگهی شما ثبت شد!')
-}
 </script>
 </body>
 </html>
