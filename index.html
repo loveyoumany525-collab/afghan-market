@@ -3,271 +3,99 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#2a5298">
-<title id="pageTitle">افغان مارکت ماشین</title>
-<link rel="manifest" href="/manifest.json"> <!-- این خط جدید -->
+<title>مارکت افغان - خرید و فروش ماشین</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Tahoma;background:#f0f2f5}
-header{background:#2a5298;color:#fff;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:999}
-.lang-select{padding:6px;border-radius:5px;border:none;font-size:14px}
-#filterBtn{background:#fff;color:#2a5298;border:none;padding:8px 15px;border-radius:5px;font-weight:bold;cursor:pointer}
-.container{max-width:1200px;margin:15px auto;padding:10px}
-
-#filterModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000}
-.modal-content{background:#fff;width:100%;max-width:500px;margin:0 auto;height:100%;overflow-y:auto;padding:15px}
-.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding-bottom:12px;margin-bottom:15px}
-.modal-header h3{font-size:18px}
-.reset-link{color:#e74c3c;font-weight:bold;cursor:pointer;font-size:14px}
-
-.filter-section{margin-bottom:18px}
-.filter-section h4{margin-bottom:8px;color:#333;font-size:14px;font-weight:bold}
-.filter-select{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:15px;background:#fff}
-
-.price-range{display:flex;gap:10px;margin-bottom:10px}
-.price-range input{flex:1;padding:10px;border:1px solid #ddd;border-radius:8px}
-
-.verified-toggle{display:flex;gap:10px}
-.verified-btn{flex:1;padding:12px;border:2px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;text-align:center;font-weight:bold}
-.verified-btn.active{border-color:#2a5298;background:#eaf1ff;color:#2a5298}
-
-.modal-footer{display:flex;gap:10px;margin-top:20px;padding:15px 0;border-top:1px solid #eee;position:sticky;bottom:0;background:#fff}
-.btn-show{width:100%;padding:14px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer}
-
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px}
-.product{background:#fff;border-radius:10px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.product img{width:100%;height:180px;object-fit:cover;border-radius:8px}
-.price{color:#e74c3c;font-weight:bold;font-size:18px;margin:8px 0}
-.badge{font-size:11px;background:#2a5298;color:#fff;padding:3px 8px;border-radius:4px;margin-left:5px}
-.btn-wa{width:100%;padding:10px;background:#25D366;color:#fff;border:none;border-radius:5px;font-weight:bold;margin-top:8px}
-.details{font-size:14px;color:#555;margin:5px 0}
+header{background:#2a5298;color:#fff;padding:15px;text-align:center}
+header h1{margin-bottom:10px}
+.btn{background:#27ae60;color:white;padding:12px 25px;border:none;border-radius:8px;cursor:pointer;font-size:16px;font-weight:bold}
+.btn:hover{background:#219a52}
+.container{max-width:1200px;margin:20px auto;padding:10px}
+#formBox{background:white;padding:20px;border-radius:10px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1);display:none}
+#formBox input,#formBox textarea{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
+.card{background:white;padding:15px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.card img{width:100%;height:200px;object-fit:cover;border-radius:8px;margin-bottom:10px}
+.card h3{color:#2a5298;margin-bottom:8px}
+.info{font-size:14px;color:#555;margin:5px 0}
+.whatsapp{background:#25D366;color:white;padding:10px;border:none;border-radius:8px;width:100%;cursor:pointer;font-size:16px;margin-top:10px}
+.whatsapp:hover{background:#1ebe5c}
 </style>
 </head>
 <body>
 <header>
-<h1 id="headerTitle" style="font-size:18px">🚗 افغان مارکت</h1>
-<div style="display:flex;gap:8px">
-<select class="lang-select" id="lang">
-<option value="fa">فارسی</option>
-<option value="en">English</option>
-<option value="ps">پښتو</option>
-</select>
-<button id="filterBtn" onclick="openFilter()">🔍 فیلتر</button>
-</div>
+<h1>مارکت افغان - Afghan Market</h1>
+<button class="btn" onclick="document.getElementById('formBox').style.display='block'">+ ثبت آگهی رایگان ماشین</button>
 </header>
 
 <div class="container">
-<div class="products" id="list">
-<div class="product" data-brand="تویوتا" data-model="کرولا" data-year="2020" data-city="کابل" data-price="500000" data-type="سدان" data-verified="yes">
-<img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80">
-<h3><span class="badge">تایید شده</span>تویوتا کرولا</h3>
-<p class="details">سال: 2020 | شهر: کابل | سدان</p>
-<p class="price">500,000 افغانی</p>
-<button class="btn-wa" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
+<!-- فرم ثبت آگهی -->
+<div id="formBox">
+<h2>ثبت آگهی جدید</h2>
+<input type="text" id="brand" placeholder="برند ماشین: مثلا تویوتا">
+<input type="text" id="model" placeholder="مدل ماشین: مثلا کرولا">
+<input type="number" id="year" placeholder="سال ساخت: مثلا 2020">
+<input type="number" id="km" placeholder="کارکرد: مثلا 50000 کیلومتر">
+<input type="number" id="price" placeholder="قیمت به افغانی: مثلا 800000">
+<input type="text" id="location" placeholder="شهر: مثلا کابل">
+<input type="tel" id="whatsapp" placeholder="شماره واتساپ: 93xxxxxxxxx">
+<textarea id="desc" placeholder="توضیحات: رنگ، وضعیت، آپشن ها..."></textarea>
+<input type="text" id="img" placeholder="لینک عکس ماشین: از گوگل کپی کن">
+<button class="btn" onclick="addAd()">ثبت آگهی</button>
+<button class="btn" style="background:#888" onclick="document.getElementById('formBox').style.display='none'">بستن</button>
 </div>
 
-<div class="product" data-brand="مرسدس" data-model="AMG GT" data-year="2018" data-city="مزار شریف" data-price="420000" data-type="کوپه" data-verified="no">
-<img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&q=80">
-<h3>مرسدس AMG GT</h3>
-<p class="details">سال: 2018 | شهر: مزار شریف | کوپه</p>
-<p class="price">420,000 افغانی</p>
-<button class="btn-wa" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
-</div>
-
-<div class="product" data-brand="لکسوس" data-model="RX350" data-year="2021" data-city="هرات" data-price="850000" data-type="شاسی بلند" data-verified="yes">
-<img src="https://images.unsplash.com/photo-1494972681923-2a4f6feae9d9?w=600&q=80">
-<h3><span class="badge">تایید شده</span>لکسوس RX350</h3>
-<p class="details">سال: 2021 | شهر: هرات | شاسی بلند</p>
-<p class="price">850,000 افغانی</p>
-<button class="btn-wa" onclick="window.open('https://wa.me/971561854027')">واتساپ</button>
-</div>
-</div>
-</div>
-
-<!-- پاپ آپ فیلتر -->
-<div id="filterModal" onclick="closeFilter()">
-<div class="modal-content" onclick="event.stopPropagation()">
-<div class="modal-header">
-<h3>فیلتر</h3>
-<span class="reset-link" onclick="resetFilters()">Reset Filters</span>
-<span id="closeBtn" onclick="closeFilter()" style="font-size:28px;cursor:pointer">×</span>
-</div>
-
-<div class="filter-section">
-<h4>شهر / City</h4>
-<select class="filter-select" id="city">
-<option value="all">همه شهرها</option>
-<option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال آباد</option>
-</select>
-</div>
-
-<div class="filter-section">
-<h4>برند ماشین / Car Brand</h4>
-<select class="filter-select" id="brand" onchange="updateModel()">
-<option value="all">انتخاب کنید</option>
-<option value="تویوتا">تویوتا</option>
-<option value="هوندا">هوندا</option>
-<option value="مرسدس">مرسدس بنز</option>
-<option value="لکسوس">لکسوس</option>
-<option value="بی ام و">بی ام و</option>
-</select>
-</div>
-
-<div class="filter-section">
-<h4>مدل ماشین / Car Model</h4>
-<select class="filter-select" id="model">
-<option value="all">انتخاب کنید</option>
-</select>
-</div>
-
-<div class="filter-section">
-<h4>سال / Year</h4>
-<select class="filter-select" id="year">
-<option value="all">انتخاب کنید</option>
-<option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
-<option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option>
-</select>
-</div>
-
-<div class="filter-section">
-<h4>نوع خودرو / Vehicle Type</h4>
-<select class="filter-select" id="type">
-<option value="all">انتخاب کنید</option>
-<option>سدان</option><option>شاسی بلند</option><option>کوپه</option><option>پیکاپ</option><option>هاچ بک</option>
-</select>
-</div>
-
-<div class="filter-section">
-<h4>قیمت / Price - AFN</h4>
-<div class="price-range">
-<input type="number" id="minPrice" placeholder="کمترین" value="0">
-<input type="number" id="maxPrice" placeholder="بیشترین" value="5000000">
-</div>
-</div>
-
-<div class="filter-section">
-<h4>کاربر</h4>
-<div class="verified-toggle">
-<button type="button" class="verified-btn active" id="vAll" onclick="setVerified('all')">همه</button>
-<button type="button" class="verified-btn" id="vYes" onclick="setVerified('yes')">✓ تایید شده</button>
-</div>
-</div>
-
-<div class="modal-footer">
-<button class="btn-show" onclick="applyFilter()" id="showBtn">نمایش نتایج</button>
-</div>
-</div>
+<!-- جایی که آگهی ها میان -->
+<div class="grid" id="adsList"></div>
 </div>
 
 <script>
-// این کد جدید برای نصب اپ هست
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}
+// آگهی های نمونه
+let ads = [
+{brand:"تویوتا",model:"کرولا",year:2020,km:60000,price:800000,location:"کابل",whatsapp:"93700000000",desc:"بدون رنگ، گیربکس اتومات",img:"https://images.unsplash.com/photo-1542362567-b07e3ded8a6b?w=400"}
+];
 
-// توابع باز و بسته کردن
-function openFilter(){
-    document.getElementById('filterModal').style.display = 'block';
-    loadFilters();
-}
-function closeFilter(){
-    document.getElementById('filterModal').style.display = 'none';
-}
-
-// مدل ها بر اساس برند
-const models = {
-تویوتا: ["کرولا", "لندکروزر", "کمری", "پریوس", "RAV4"],
-هوندا: ["سیویک", "اکورد", "CR-V"],
-مرسدس: ["C200", "E300", "G63", "AMG GT", "S500"],
-لکسوس: ["RX350", "LX570", "ES300"],
-"بی ام و": ["X5", "320i", "M4"]
-};
-
-function updateModel(){
-let brand = document.getElementById('brand').value;
-let modelSelect = document.getElementById('model');
-let savedModel = localStorage.getItem('filter_model');
-modelSelect.innerHTML = '<option value="all">انتخاب کنید</option>';
-if(models[brand]){
-models[brand].forEach(m=>{
-let selected = (m == savedModel)? 'selected' : '';
-modelSelect.innerHTML += `<option ${selected}>${m}</option>`;
+// نمایش آگهی ها
+function showAds(){
+document.getElementById('adsList').innerHTML = '';
+ads.forEach(ad=>{
+let card = `
+<div class="card">
+<img src="${ad.img}" onerror="this.src='https://via.placeholder.com/300x200'">
+<h3>${ad.brand} ${ad.model} - ${ad.year}</h3>
+<div class="info">💰 قیمت: ${ad.price.toLocaleString()} افغانی</div>
+<div class="info">🚗 کارکرد: ${ad.km.toLocaleString()} کیلومتر</div>
+<div class="info">📍 شهر: ${ad.location}</div>
+<div class="info">📝 ${ad.desc}</div>
+<button class="whatsapp" onclick="window.open('https://wa.me/${ad.whatsapp}','_blank')">تماس در واتساپ</button>
+</div>
+`;
+document.getElementById('adsList').innerHTML += card;
 })
 }
+showAds();
+
+// اضافه کردن آگهی جدید
+function addAd(){
+let newAd = {
+brand:document.getElementById('brand').value,
+model:document.getElementById('model').value,
+year:document.getElementById('year').value,
+km:document.getElementById('km').value,
+price:document.getElementById('price').value,
+location:document.getElementById('location').value,
+whatsapp:document.getElementById('whatsapp').value,
+desc:document.getElementById('desc').value,
+img:document.getElementById('img').value
 }
-
-let selectedVerified = 'all';
-function setVerified(val){
-selectedVerified = val;
-document.querySelectorAll('.verified-btn').forEach(b=>b.classList.remove('active'));
-if(val=='all') document.getElementById('vAll').classList.add('active');
-if(val=='yes') document.getElementById('vYes').classList.add('active');
+ads.unshift(newAd);
+showAds();
+document.getElementById('formBox').style.display='none';
+// پاک کردن فرم
+document.querySelectorAll('#formBox input, #formBox textarea').forEach(i=>i.value='')
+alert('آگهی شما ثبت شد!')
 }
-
-function saveFilters(){
-localStorage.setItem('filter_city', document.getElementById('city').value);
-localStorage.setItem('filter_brand', document.getElementById('brand').value);
-localStorage.setItem('filter_model', document.getElementById('model').value);
-localStorage.setItem('filter_year', document.getElementById('year').value);
-localStorage.setItem('filter_type', document.getElementById('type').value);
-localStorage.setItem('filter_minPrice', document.getElementById('minPrice').value);
-localStorage.setItem('filter_maxPrice', document.getElementById('maxPrice').value);
-localStorage.setItem('filter_verified', selectedVerified);
-}
-
-function loadFilters(){
-document.getElementById('city').value = localStorage.getItem('filter_city') || 'all';
-document.getElementById('brand').value = localStorage.getItem('filter_brand') || 'all';
-updateModel();
-document.getElementById('year').value = localStorage.getItem('filter_year') || 'all';
-document.getElementById('type').value = localStorage.getItem('filter_type') || 'all';
-document.getElementById('minPrice').value = localStorage.getItem('filter_minPrice') || '0';
-document.getElementById('maxPrice').value = localStorage.getItem('filter_maxPrice') || '5000000';
-setVerified(localStorage.getItem('filter_verified') || 'all');
-}
-
-function resetFilters(){
-localStorage.clear();
-document.getElementById('city').value='all';
-document.getElementById('brand').value='all';
-updateModel();
-document.getElementById('year').value='all';
-document.getElementById('type').value='all';
-document.getElementById('minPrice').value='0';
-document.getElementById('maxPrice').value='5000000';
-setVerified('all');
-applyFilter();
-}
-
-function applyFilter(){
-saveFilters();
-let city = document.getElementById('city').value;
-let brand = document.getElementById('brand').value;
-let model = document.getElementById('model').value;
-let year = document.getElementById('year').value;
-let type = document.getElementById('type').value;
-let minP = parseInt(document.getElementById('minPrice').value);
-let maxP = parseInt(document.getElementById('maxPrice').value);
-let count = 0;
-
-document.querySelectorAll('.product').forEach(p=>{
-let show=true;
-if(city!='all' && p.dataset.city!= city) show=false;
-if(brand!='all' && p.dataset.brand!= brand) show=false;
-if(model!='all' && p.dataset.model!= model) show=false;
-if(year!='all' && p.dataset.year!= year) show=false;
-if(type!='all' && p.dataset.type!= type) show=false;
-if(selectedVerified!='all' && p.dataset.verified!= selectedVerified) show=false;
-let pPrice = parseInt(p.dataset.price);
-if(pPrice < minP || pPrice > maxP) show=false;
-
-p.style.display = show? 'block' : 'none';
-if(show) count++;
-});
-
-document.getElementById('showBtn').innerText = `نمایش ${count} نتیجه`;
-setTimeout(()=>closeFilter(), 400);
-}
-
-window.onload = ()=> { loadFilters(); applyFilter(); }
 </script>
 </body>
 </html>
