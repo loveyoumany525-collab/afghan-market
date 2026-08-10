@@ -49,6 +49,32 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .toast{position:fixed;bottom:80px;right:20px;background:#111827;color:#fff;padding:13px 18px;border-radius:10px;display:none;z-index:2000}
 @media(max-width:850px){.nav{display:none}.hero h1{font-size:27px}.body-grid{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.cars{grid-template-columns:1fr 1fr}.footer-inner{grid-template-columns:1fr}.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;z-index:900;box-shadow:0 -3px 15px #0002;justify-content:space-around}.bottom-nav button{background:#fff;color:#697384;font-size:11px}.bottom-nav span{display:block;font-size:20px}.footer{padding-bottom:85px}}
 @media(max-width:520px){.body-grid{grid-template-columns:repeat(2,1fr)}.cars{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.detail-gallery{grid-template-columns:1fr 1fr}.detail-gallery img:first-child{grid-column:1/-1;grid-row:auto;height:220px}.detail-gallery img{height:110px}.details-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.detail-top{align-items:flex-start;flex-direction:column}.searchbox{flex-direction:column}.searchbtn{padding:13px}}
+
+/* --- Multi photo/video gallery update --- */
+.media-input{border:2px dashed #b8c0cc!important;background:#f8fafc!important;padding:18px!important}
+.media-help{font-size:12px;color:#7b8490;margin-top:6px;line-height:1.8}
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.preview-item{position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:1/1}
+.preview-item img,.preview-item video{width:100%;height:100%;object-fit:cover}
+.preview-item .remove-media{position:absolute;top:5px;left:5px;width:27px;height:27px;border-radius:50%;background:#e53935;color:#fff;font-weight:bold}
+.detail-media{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:18px}
+.detail-media .media-main{grid-row:span 2;height:390px}
+.detail-media .media-thumb{height:190px}
+.detail-media img,.detail-media video{width:100%;height:100%;object-fit:cover;border-radius:12px;background:#111}
+.media-count{position:absolute;bottom:10px;right:10px;background:#000b;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px}
+.card-gallery{position:relative}
+.gallery-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.gallery-dot{width:7px;height:7px;border-radius:50%;background:#fff8}
+.gallery-dot.active{background:#fff}
+.inline-summary{margin-top:18px;background:#f7f8fa;border-radius:14px;padding:15px}
+.inline-summary h3{margin-bottom:10px}
+@media(max-width:520px){
+ .preview-grid{grid-template-columns:repeat(3,1fr)}
+ .detail-media{grid-template-columns:1fr 1fr}
+ .detail-media .media-main{grid-column:1/-1;grid-row:auto;height:250px}
+ .detail-media .media-thumb{height:120px}
+}
+
 </style>
 </head>
 <body>
@@ -113,7 +139,12 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 <div class="form-group"><label>گیربکس</label><select id="nGear"><option>اتومات</option><option>دستی</option></select></div>
 <div class="form-group"><label>شهر</label><select id="nCity"><option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال‌آباد</option></select></div>
 <div class="form-group"><label>شماره تماس</label><input id="nPhone" required></div>
-<div class="form-group full"><label>لینک عکس</label><input id="nImage" placeholder="https://..."></div>
+<div class="form-group full">
+<label>📷 عکس و 🎥 ویدیوهای موتر</label>
+<input id="nMedia" class="media-input" type="file" accept="image/*,video/*" multiple onchange="previewMedia(event)">
+<div class="media-help">هر تعداد عکس و ویدیو که لازم داری انتخاب کن. خریدار همه رسانه‌ها را داخل خود آگهی می‌بیند و لازم نیست لینک دیگری باز کند.</div>
+<div id="mediaPreview" class="preview-grid"></div>
+</div>
 <div class="form-group full"><label>توضیحات</label><textarea id="nDesc"></textarea></div>
 </div><button class="submit">🚀 انتشار آگهی</button></form></div></div>
 <div class="toast" id="toast"></div>
@@ -146,6 +177,20 @@ const stored=JSON.parse(localStorage.getItem("afghanCars")||"[]"); cars=[...stor
 let favorites=JSON.parse(localStorage.getItem("afghanFav")||"[]"), condition="", make="", lang="fa";
 
 function money(n){return new Intl.NumberFormat("fa-AF").format(n)}
+function previewMedia(e){
+ const box=document.getElementById("mediaPreview"); box.innerHTML="";
+ [...e.target.files].forEach((file,i)=>{
+   const url=URL.createObjectURL(file);
+   const el=file.type.startsWith("video/")?`<video src="${url}" muted controls></video>`:`<img src="${url}">`;
+   box.insertAdjacentHTML("beforeend",`<div class="preview-item">${el}<button type="button" class="remove-media" onclick="removeSelectedMedia(${i})">×</button></div>`);
+ });
+}
+function removeSelectedMedia(i){
+ const input=document.getElementById("nMedia"), dt=new DataTransfer();
+ [...input.files].forEach((f,n)=>{if(n!==i)dt.items.add(f)});
+ input.files=dt.files; previewMedia({target:input});
+}
+
 function init(){
  document.getElementById("bodyGrid").innerHTML=bodyTypes.map(([t,i])=>`<button class="body-card" onclick="setType('${t}')"><img src="${imgs[t]||imgs.SUV}"><div>${t}</div></button>`).join("");
  document.getElementById("makeRow").innerHTML=makes.map(m=>`<button class="make-card" onclick="setMake('${m}')">${logos[m]?`<img src="${logos[m]}" onerror="this.style.display='none'">`:"🚘"}<div>${m}</div></button>`).join("");
@@ -162,25 +207,45 @@ function renderCars(){
  document.getElementById("count").textContent=`(${result.length})`;
  document.getElementById("carList").innerHTML=result.length?result.map(card).join(""):`<div class="empty"><h3>😔 موتر پیدا نشد</h3><p>فیلترها را تغییر بده.</p></div>`;
 }
+function mediaFor(c){
+ const m=(c.media&&c.media.length)?c.media:[...(c.images||[]).map(src=>({type:"image",src}))];
+ return m.length?m:[{type:"image",src:imgs[c.type]||imgs.SUV}];
+}
+function mediaElement(m, cls=""){
+ return m.type==="video"
+   ? `<video class="${cls}" src="${m.src}" muted playsinline preload="metadata"></video>`
+   : `<img class="${cls}" src="${m.src}" onerror="this.src='${imgs.SUV}'">`;
+}
 function card(c){
- const liked=favorites.includes(c.id), monthly=Math.round(c.price/72);
+ const liked=favorites.includes(c.id), monthly=Math.round(c.price/72), ms=mediaFor(c);
  return `<article class="card" onclick="openDetails(${c.id})">
- <div class="image-wrap"><img class="car-img" src="${c.images?.[0]||imgs[c.type]||imgs.SUV}" onerror="this.src='${imgs.SUV}'">
+ <div class="image-wrap card-gallery">${mediaElement(ms[0],"car-img")}
+ <div class="media-count">📷 ${ms.filter(x=>x.type==="image").length} &nbsp; 🎥 ${ms.filter(x=>x.type==="video").length}</div>
  <div class="badges">${c.certified?'<span class="badge certified">CERTIFIED</span>':''}${c.featured?'<span class="badge featured">FEATURED</span>':''}${c.inspected?'<span class="badge inspected">INSPECTED</span>':''}</div>
  <div class="card-tools"><button class="round" onclick="event.stopPropagation();shareCar(${c.id})">↗</button><button class="round" onclick="event.stopPropagation();toggleFav(${c.id})">${liked?'❤️':'♡'}</button></div></div>
  <div class="card-body"><div class="price">${money(c.price)} افغانی</div><div class="monthly">💳 حدود ${money(monthly)} در ماه</div><div class="car-title">${c.condition==='Used'?'دست‌دوم ':c.condition==='New'?'نو ':''}${c.brand} ${c.model} ${c.year}</div><div class="location">📍 ${c.city}</div>
- <div class="specs"><div>📅 ${c.year}</div><div>🛣️ ${money(c.km)} KM</div><div>⚙️ ${c.gear}</div><div>⛽ ${c.fuel}</div><div>🌐 ${c.regional}</div></div>
- <div class="actions"><button class="call" onclick="event.stopPropagation();callSeller('${c.phone||''}')">📞 تماس</button><button class="visit" onclick="event.stopPropagation();visit('${c.website||''}')">🌐 Visit Website</button></div></div></article>`;
+ <div class="specs"><div>📅 ${c.year}</div><div>🛣️ ${money(c.km)} KM</div><div>⚙️ ${c.gear}</div><div>⛽ ${c.fuel}</div><div>🌐 ${c.regional}</div><div>📸 ${ms.length} فایل</div></div>
+ <div class="actions"><button class="call" onclick="event.stopPropagation();callSeller('${c.phone||''}')">📞 تماس</button><button class="visit" onclick="event.stopPropagation();openDetails(${c.id})">👁️ دیدن جزئیات</button></div></div></article>`;
 }
 function openDetails(id){
  const c=cars.find(x=>x.id===id); if(!c)return;
- const im=c.images?.length?c.images:[imgs[c.type]||imgs.SUV];
- const fields=[["سال مدل",c.year],["کیلومتر",money(c.km)+" KM"],["نوع سوخت",c.fuel],["گیربکس",c.gear],["موقعیت",c.city],["تعداد دروازه",c.doors||"N/A"],["تعداد سیلندر",c.cylinders||"N/A"],["رنگ بیرونی",c.color||"N/A"],["سابقه تصادف",c.accident||"N/A"],["سرویس",c.service||"N/A"],["After Market",c.aftermarket||"N/A"],["حجم موتور",c.engine||"N/A"],["نوع انتقال نیرو",c.drive||"N/A"],["مشخصات منطقه‌ای",c.regional||"N/A"],["مالکان قبلی",c.owners||"N/A"],["گارانتی",c.warranty||"N/A"]];
+ const ms=mediaFor(c);
+ const fields=[
+ ["سال مدل",c.year],["کیلومتر",money(c.km)+" KM"],["نوع سوخت",c.fuel],["گیربکس",c.gear],
+ ["موقعیت",c.city],["تعداد دروازه",c.doors||"N/A"],["تعداد سیلندر",c.cylinders||"N/A"],
+ ["رنگ بیرونی",c.color||"N/A"],["سابقه تصادف",c.accident||"N/A"],["سرویس",c.service||"N/A"],
+ ["After Market",c.aftermarket||"N/A"],["حجم موتور",c.engine||"N/A"],["نوع انتقال نیرو",c.drive||"N/A"],
+ ["مشخصات منطقه‌ای",c.regional||"N/A"],["مالکان قبلی",c.owners||"N/A"],["گارانتی",c.warranty||"N/A"]
+ ];
+ const mediaHtml=ms.map((m,i)=>`<div class="${i===0?'media-main':'media-thumb'}">${mediaElement(m)}</div>`).join("");
  document.getElementById("detailTitle").textContent=`${c.brand} ${c.model} ${c.year}`;
- document.getElementById("detailContent").innerHTML=`<div class="detail-gallery">${[...im,...im,...im].slice(0,3).map(x=>`<img src="${x}" onerror="this.src='${imgs.SUV}'">`).join("")}</div>
- <div class="detail-top"><div><div class="detail-price">${money(c.price)} افغانی</div><p>📍 ${c.city} · ${c.condition}</p></div><div class="detail-actions"><button class="call" onclick="callSeller('${c.phone||''}')">📞 تماس</button><button class="visit" onclick="visit('${c.website||''}')">🌐 سایت</button></div></div>
+ document.getElementById("detailContent").innerHTML=`
+ <div class="detail-media">${mediaHtml}</div>
+ <div class="detail-top"><div><div class="detail-price">${money(c.price)} افغانی</div><p>📍 ${c.city} · ${c.condition} · 📷 ${ms.filter(x=>x.type==="image").length} عکس · 🎥 ${ms.filter(x=>x.type==="video").length} ویدیو</p></div>
+ <div class="detail-actions"><button class="call" onclick="callSeller('${c.phone||''}')">📞 تماس با فروشنده</button><button class="visit" onclick="shareCar(${c.id})">↗ اشتراک‌گذاری</button></div></div>
  <div class="details-grid">${fields.map(f=>`<div class="detail-item"><div class="label">${f[0]}</div><div class="value">${f[1]}</div></div>`).join("")}</div>
- <p style="margin-top:18px;color:#666;line-height:2">${c.description||"توضیحات اضافی برای این آگهی ثبت نشده است."}</p>`;
+ <div class="inline-summary"><h3>📝 توضیحات فروشنده</h3><p style="line-height:2;color:#555">${c.description||"توضیحات اضافی برای این آگهی ثبت نشده است."}</p></div>
+ <div class="inline-summary"><h3>📌 اطلاعات مهم</h3><p style="line-height:2;color:#555">همه عکس‌ها، ویدیوها و مشخصات این موتر همین‌جا نمایش داده می‌شود؛ برای دیدن جزئیات نیازی به باز کردن سایت دیگری نیست.</p></div>`;
  document.getElementById("detailModal").style.display="block"; document.body.style.overflow="hidden";
 }
 function closeModal(id){document.getElementById(id).style.display="none";document.body.style.overflow="auto"}
@@ -196,7 +261,40 @@ function callSeller(p){if(p)location.href="tel:"+p;else toast("شماره فرو
 function visit(url){if(url&&url!=="https://example.com")window.open(url,"_blank");else toast("لینک سایت فروشنده ثبت نشده است")}
 async function shareCar(id){const c=cars.find(x=>x.id===id),text=`${c.brand} ${c.model} ${c.year} - ${money(c.price)} افغانی`;try{await navigator.share({title:text,text})}catch(e){navigator.clipboard?.writeText(text);toast("مشخصات آگهی کپی شد")}}
 function openSell(){document.getElementById("sellModal").style.display="block";document.body.style.overflow="hidden"}
-function addCar(e){e.preventDefault();const c={id:Date.now(),brand:nBrand.value,model:nModel.value,year:+nYear.value,price:+nPrice.value,km:+nKm.value,type:nType.value,fuel:nFuel.value,gear:nGear.value,city:nCity.value,phone:nPhone.value,website:"",condition:"Used",certified:false,featured:false,inspected:false,doors:4,cylinders:"N/A",color:"N/A",accident:"ثبت نشده",service:"ثبت نشده",aftermarket:"ثبت نشده",engine:"N/A",drive:"N/A",regional:"GCC Specs",owners:"N/A",warranty:"NO",description:nDesc.value,images:nImage.value?[nImage.value]:[imgs[nType.value]||imgs.SUV]};cars.unshift(c);const saved=cars.filter(x=>x.id>=Date.now()-10000);localStorage.setItem("afghanCars",JSON.stringify(saved));closeModal("sellModal");e.target.reset();renderCars();toast("✅ آگهی ثبت شد")}
+async function addCar(e){
+ e.preventDefault();
+ const files=[...(document.getElementById("nMedia").files||[])];
+ const media=[];
+ for(const file of files){
+   // Store selected media as data URLs for this demo/local version.
+   // A real production site should upload these files to cloud/server storage.
+   const data=await new Promise((resolve,reject)=>{
+     const r=new FileReader();
+     r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file);
+   });
+   media.push({type:file.type.startsWith("video/")?"video":"image",src:data,name:file.name});
+ }
+ const c={
+   id:Date.now(),brand:nBrand.value,model:nModel.value,year:+nYear.value,price:+nPrice.value,
+   km:+nKm.value,type:nType.value,fuel:nFuel.value,gear:nGear.value,city:nCity.value,
+   phone:nPhone.value,website:"",condition:"Used",certified:false,featured:false,inspected:false,
+   doors:4,cylinders:"N/A",color:"N/A",accident:"ثبت نشده",service:"ثبت نشده",
+   aftermarket:"ثبت نشده",engine:"N/A",drive:"N/A",regional:"GCC Specs",owners:"N/A",
+   warranty:"NO",description:nDesc.value,media:media,
+   images:media.filter(x=>x.type==="image").map(x=>x.src)
+ };
+ cars.unshift(c);
+ try{
+   const saved=cars.filter(x=>x.id>=Date.now()-10000);
+   localStorage.setItem("afghanCars",JSON.stringify(saved));
+ }catch(err){
+   // Keep the listing in the current page even if browser storage is full.
+   toast("⚠️ آگهی ثبت شد، اما حافظه مرورگر برای ذخیره همه ویدیوها کافی نیست.");
+ }
+ closeModal("sellModal"); e.target.reset();
+ document.getElementById("mediaPreview").innerHTML="";
+ renderCars(); toast("✅ آگهی با عکس و ویدیو ثبت شد");
+}
 function toast(t){const x=document.getElementById("toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",2200)}
 function toggleLanguage(){lang=lang==="fa"?"en":"fa";document.documentElement.dir=lang==="fa"?"rtl":"ltr";document.documentElement.lang=lang;document.querySelector(".lang").textContent=lang==="fa"?"English":"دری";document.getElementById("heroTitle").textContent=lang==="fa"?"موتر دلخواهت را پیدا کن":"Find your perfect car";document.getElementById("heroText").textContent=lang==="fa"?"خرید و فروش موتر در سراسر افغانستان":"Buy and sell cars across Afghanistan";document.getElementById("search").placeholder=lang==="fa"?"برند، مدل یا نسخه را جستجو کنید...":"Search by make, model or version..."}
 init();
