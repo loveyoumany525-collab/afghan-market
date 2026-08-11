@@ -75,6 +75,20 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
  .detail-media .media-thumb{height:120px}
 }
 
+
+/* v3: WhatsApp + seller ownership + reports + profile */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.profile-grid input{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px}
+.profile-save{margin-top:12px;background:var(--blue);color:#fff;padding:12px 20px;border-radius:9px}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.owner-actions button,.report-btn{padding:9px 12px;border-radius:9px;background:#eef2f7;color:#394150}
+.report-btn{color:#c62828;background:#fff0f0}
+.whatsapp{background:#20b858!important;color:#fff!important;padding:12px;border-radius:9px}
+.admin-list{display:grid;gap:10px}
+.report-card{border:1px solid #eee;border-radius:12px;padding:14px;background:#fafafa;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.report-card button{padding:9px;border-radius:8px;background:#e53935;color:#fff}
+.seller-box{background:#f7f8fa;border-radius:14px;padding:14px;margin:14px 0}
+@media(max-width:520px){.profile-grid{grid-template-columns:1fr}.report-card{display:block}.report-card button{margin-top:8px}}
 </style>
 </head>
 <body>
@@ -82,7 +96,7 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 <div class="topbar">
 <div class="logo">🚘 مارکت <span>افغان</span></div>
 <nav class="nav">
-<button onclick="go('cars')">خرید موتر</button><button onclick="openSell()">فروش موتر</button><button onclick="showFavorites()">❤️ علاقه‌مندی‌ها</button>
+<button onclick="go('cars')">خرید موتر</button><button onclick="openSell()">فروش موتر</button><button onclick="showFavorites()">❤️ علاقه‌مندی‌ها</button><button onclick="openProfile()">👤 پروفایل</button><button onclick="openAdmin()">🛡️ مدیر</button>
 </nav>
 <button class="lang" onclick="toggleLanguage()">English</button>
 </div>
@@ -124,7 +138,7 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 
 <footer class="footer"><div class="footer-inner"><div><h3>مارکت افغان</h3><p>پلتفرم خرید و فروش موتر در افغانستان.</p></div><div><h3>خرید موتر</h3><p>نو و دست‌دوم</p><p>آگهی‌های ویژه</p></div><div><h3>فروش موتر</h3><p>ثبت آگهی</p><p>آگهی‌های من</p></div></div></footer>
 
-<div class="bottom-nav"><button onclick="go('home')"><span>🏠</span>خانه</button><button onclick="go('cars')"><span>🚘</span>خرید</button><button onclick="openSell()"><span>➕</span>فروش</button><button onclick="showFavorites()"><span>❤️</span>علاقه</button><button onclick="alert('پروفایل در نسخه بعدی با ورود کاربر فعال می‌شود')"><span>👤</span>پروفایل</button></div>
+<div class="bottom-nav"><button onclick="go('home')"><span>🏠</span>خانه</button><button onclick="go('cars')"><span>🚘</span>خرید</button><button onclick="openSell()"><span>➕</span>فروش</button><button onclick="showFavorites()"><span>❤️</span>علاقه</button><button onclick="openProfile()"><span>👤</span>پروفایل</button></div>
 
 <!-- Details -->
 <div class="modal" id="detailModal"><div class="modal-box"><div class="modal-head"><h2 id="detailTitle">جزئیات موتر</h2><button class="close" onclick="closeModal('detailModal')">✕</button></div><div id="detailContent"></div></div></div>
@@ -147,6 +161,23 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 </div>
 <div class="form-group full"><label>توضیحات</label><textarea id="nDesc"></textarea></div>
 </div><button class="submit">🚀 انتشار آگهی</button></form></div></div>
+
+<div class="modal" id="profileModal"><div class="modal-box">
+<div class="modal-head"><h2>👤 پروفایل من</h2><button class="close" onclick="closeModal('profileModal')">✕</button></div>
+<p style="color:#666;line-height:2">نام، شهر و شماره واتساپ خودت را ثبت کن. آگهی‌های جدیدت به همین پروفایل وصل می‌شوند.</p>
+<div class="profile-grid">
+<div><label>نام</label><input id="pName" placeholder="نام شما"></div>
+<div><label>شهر</label><input id="pCity" placeholder="مثلاً کابل"></div>
+<div style="grid-column:1/-1"><label>شماره واتساپ</label><input id="pPhone" placeholder="مثلاً 937XXXXXXXXX"></div>
+</div>
+<button class="profile-save" onclick="saveProfile()">💾 ذخیره پروفایل</button>
+</div></div>
+
+<div class="modal" id="adminModal"><div class="modal-box">
+<div class="modal-head"><h2>🛡️ پنل مدیر</h2><button class="close" onclick="closeModal('adminModal')">✕</button></div>
+<p style="color:#777;line-height:2">گزارش‌های کاربران را بررسی کن و در صورت تخلف، آگهی را حذف کن.</p>
+<div id="reportList" class="admin-list"></div>
+</div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -174,6 +205,18 @@ let cars=[
 {id:5,brand:"Toyota",model:"Corolla",year:2022,km:45000,fuel:"بنزین",gear:"اتومات",type:"Sedan",city:"مزار شریف",price:65000,condition:"Used",certified:false,featured:false,inspected:true,doors:4,cylinders:4,color:"White",accident:"بدون تصادف",service:"بله",aftermarket:"نه",engine:"1800",drive:"Front Wheel Drive",regional:"GCC Specs",owners:"2",warranty:"NO",phone:"0700000000",website:"https://example.com",images:["https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1000&q=80"]}
 ];
 const stored=JSON.parse(localStorage.getItem("afghanCars")||"[]"); cars=[...stored,...cars];
+cars.forEach(c=>{
+  c.ownerId=c.ownerId||"demo";
+  c.sellerName=c.sellerName||"فروشنده";
+  c.sellerCity=c.sellerCity||c.city;
+  c.phone=c.phone||"";
+});
+let profile=JSON.parse(localStorage.getItem("afghanProfile")||"null")||{
+  id:"user-"+Date.now(),name:"کاربر مهمان",city:"",phone:""
+};
+localStorage.setItem("afghanProfile",JSON.stringify(profile));
+let reports=JSON.parse(localStorage.getItem("afghanReports")||"[]");
+
 let favorites=JSON.parse(localStorage.getItem("afghanFav")||"[]"), condition="", make="", lang="fa";
 
 function money(n){return new Intl.NumberFormat("fa-AF").format(n)}
@@ -225,7 +268,7 @@ function card(c){
  <div class="card-tools"><button class="round" onclick="event.stopPropagation();shareCar(${c.id})">↗</button><button class="round" onclick="event.stopPropagation();toggleFav(${c.id})">${liked?'❤️':'♡'}</button></div></div>
  <div class="card-body"><div class="price">${money(c.price)} افغانی</div><div class="monthly">💳 حدود ${money(monthly)} در ماه</div><div class="car-title">${c.condition==='Used'?'دست‌دوم ':c.condition==='New'?'نو ':''}${c.brand} ${c.model} ${c.year}</div><div class="location">📍 ${c.city}</div>
  <div class="specs"><div>📅 ${c.year}</div><div>🛣️ ${money(c.km)} KM</div><div>⚙️ ${c.gear}</div><div>⛽ ${c.fuel}</div><div>🌐 ${c.regional}</div><div>📸 ${ms.length} فایل</div></div>
- <div class="actions"><button class="call" onclick="event.stopPropagation();callSeller('${c.phone||''}')">📞 تماس</button><button class="visit" onclick="event.stopPropagation();openDetails(${c.id})">👁️ دیدن جزئیات</button></div></div></article>`;
+ <div class="actions"><button class="call" onclick="event.stopPropagation();openWhatsApp(${c.id})">🟢 واتساپ</button><button class="visit" onclick="event.stopPropagation();openDetails(${c.id})">👁️ همه جزئیات</button></div></div></article>`;
 }
 function openDetails(id){
  const c=cars.find(x=>x.id===id); if(!c)return;
@@ -242,12 +285,132 @@ function openDetails(id){
  document.getElementById("detailContent").innerHTML=`
  <div class="detail-media">${mediaHtml}</div>
  <div class="detail-top"><div><div class="detail-price">${money(c.price)} افغانی</div><p>📍 ${c.city} · ${c.condition} · 📷 ${ms.filter(x=>x.type==="image").length} عکس · 🎥 ${ms.filter(x=>x.type==="video").length} ویدیو</p></div>
- <div class="detail-actions"><button class="call" onclick="callSeller('${c.phone||''}')">📞 تماس با فروشنده</button><button class="visit" onclick="shareCar(${c.id})">↗ اشتراک‌گذاری</button></div></div>
+ <div class="detail-actions"><button class="whatsapp" onclick="openWhatsApp(${c.id})">🟢 واتساپ فروشنده</button><button class="visit" onclick="shareCar(${c.id})">↗ اشتراک‌گذاری</button></div></div>
+ <div class="seller-box"><b>👤 فروشنده:</b> ${c.sellerName||"فروشنده"} &nbsp; | &nbsp; 📍 ${c.sellerCity||c.city}</div>
+ <div class="owner-actions">${c.ownerId===profile.id?`<button onclick="deleteCar(${c.id})">🗑️ حذف آگهی من</button>`:""}<button class="report-btn" onclick="reportCar(${c.id})">🚩 گزارش آگهی</button></div>
  <div class="details-grid">${fields.map(f=>`<div class="detail-item"><div class="label">${f[0]}</div><div class="value">${f[1]}</div></div>`).join("")}</div>
  <div class="inline-summary"><h3>📝 توضیحات فروشنده</h3><p style="line-height:2;color:#555">${c.description||"توضیحات اضافی برای این آگهی ثبت نشده است."}</p></div>
  <div class="inline-summary"><h3>📌 اطلاعات مهم</h3><p style="line-height:2;color:#555">همه عکس‌ها، ویدیوها و مشخصات این موتر همین‌جا نمایش داده می‌شود؛ برای دیدن جزئیات نیازی به باز کردن سایت دیگری نیست.</p></div>`;
  document.getElementById("detailModal").style.display="block"; document.body.style.overflow="hidden";
 }
+function listingLink(id){
+ return location.href.split("#")[0]+"#car-"+id;
+}
+function normalizeWhatsAppNumber(n){
+ return String(n||"").replace(/[^\d]/g,"").replace(/^00/,"");
+}
+function openWhatsApp(id){
+ const c=cars.find(x=>x.id===id);if(!c)return;
+ const phone=normalizeWhatsAppNumber(c.phone);
+ if(!phone){toast("شماره واتساپ فروشنده ثبت نشده است");return}
+ const msg=encodeURIComponent(
+  `سلام، من آگهی ${c.brand} ${c.model} ${c.year} را در مارکت افغان دیدم.\n`+
+  `قیمت: ${money(c.price)} افغانی\n`+
+  `لینک همین آگهی: ${listingLink(c.id)}`
+ );
+ window.open(`https://wa.me/${phone}?text=${msg}`,"_blank");
+}
+function openProfile(){
+ pName.value=profile.name||"";
+ pCity.value=profile.city||"";
+ pPhone.value=profile.phone||"";
+ document.getElementById("profileModal").style.display="block";
+ document.body.style.overflow="hidden";
+}
+function saveProfile(){
+ profile.name=pName.value.trim()||"کاربر";
+ profile.city=pCity.value.trim();
+ profile.phone=normalizeWhatsAppNumber(pPhone.value);
+ localStorage.setItem("afghanProfile",JSON.stringify(profile));
+ cars.forEach(c=>{
+  if(c.ownerId===profile.id){
+   c.sellerName=profile.name;
+   c.sellerCity=profile.city;
+   c.phone=profile.phone;
+  }
+ });
+ saveLocalCars();
+ closeModal("profileModal");
+ renderCars();
+ toast("✅ پروفایل ذخیره شد");
+}
+function saveLocalCars(){
+ localStorage.setItem(
+  "afghanCars",
+  JSON.stringify(cars.filter(c=>c.ownerId===profile.id))
+ );
+}
+function deleteCar(id){
+ const c=cars.find(x=>x.id===id);
+ if(!c)return;
+ if(c.ownerId!==profile.id){
+  toast("این آگهی متعلق به شما نیست");
+  return;
+ }
+ if(!confirm("آیا مطمئنی می‌خواهی این آگهی حذف شود؟"))return;
+ cars=cars.filter(x=>x.id!==id);
+ saveLocalCars();
+ closeModal("detailModal");
+ renderCars();
+ toast("🗑️ آگهی حذف شد");
+}
+function reportCar(id){
+ const c=cars.find(x=>x.id===id);
+ if(!c)return;
+ const reason=prompt(
+  "دلیل گزارش را بنویسید:\nمحتوای غیر اخلاقی / غیرمرتبط با موتر / کلاهبرداری / اطلاعات نادرست"
+ );
+ if(!reason)return;
+ reports.push({
+  id:Date.now(),carId:id,reason,
+  created:new Date().toLocaleString("fa-AF")
+ });
+ localStorage.setItem("afghanReports",JSON.stringify(reports));
+ toast("🚩 گزارش برای مدیر ارسال شد");
+}
+function openAdmin(){
+ const pass=prompt("رمز مدیر را وارد کنید:");
+ if(pass!=="1234"){
+  toast("رمز مدیر نادرست است");
+  return;
+ }
+ renderReports();
+ document.getElementById("adminModal").style.display="block";
+ document.body.style.overflow="hidden";
+}
+function renderReports(){
+ const box=document.getElementById("reportList");
+ if(!reports.length){
+  box.innerHTML='<div class="empty">✅ گزارشی برای بررسی وجود ندارد.</div>';
+  return;
+ }
+ box.innerHTML=reports.map(r=>{
+  const c=cars.find(x=>x.id===r.carId);
+  return `<div class="report-card">
+   <div><b>${c?c.brand+" "+c.model+" "+c.year:"آگهی حذف شده"}</b>
+   <br><small>دلیل: ${r.reason}<br>${r.created}</small></div>
+   <div>${c?`<button onclick="adminDeleteCar(${c.id},${r.id})">حذف آگهی</button>`:""}
+   <button style="background:#607d8b" onclick="dismissReport(${r.id})">رد گزارش</button></div>
+  </div>`;
+ }).join("");
+}
+function adminDeleteCar(carId,reportId){
+ if(!confirm("این آگهی حذف شود؟"))return;
+ cars=cars.filter(c=>c.id!==carId);
+ reports=reports.filter(r=>r.id!==reportId);
+ localStorage.setItem("afghanReports",JSON.stringify(reports));
+ saveLocalCars();
+ renderReports();
+ renderCars();
+ toast("🗑️ آگهی توسط مدیر حذف شد");
+}
+function dismissReport(id){
+ reports=reports.filter(r=>r.id!==id);
+ localStorage.setItem("afghanReports",JSON.stringify(reports));
+ renderReports();
+ toast("گزارش رد شد");
+}
+
 function closeModal(id){document.getElementById(id).style.display="none";document.body.style.overflow="auto"}
 function toggleFav(id){favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];localStorage.setItem("afghanFav",JSON.stringify(favorites));renderCars();toast(favorites.includes(id)?"❤️ ذخیره شد":"حذف شد")}
 function showFavorites(){const old=document.getElementById("search").value;document.getElementById("search").value="";const fav=cars.filter(c=>favorites.includes(c.id));document.getElementById("carList").innerHTML=fav.length?fav.map(card).join(""):`<div class="empty">❤️ هنوز آگهی مورد علاقه‌ای نداری.</div>`;go("cars")}
@@ -277,7 +440,7 @@ async function addCar(e){
  const c={
    id:Date.now(),brand:nBrand.value,model:nModel.value,year:+nYear.value,price:+nPrice.value,
    km:+nKm.value,type:nType.value,fuel:nFuel.value,gear:nGear.value,city:nCity.value,
-   phone:nPhone.value,website:"",condition:"Used",certified:false,featured:false,inspected:false,
+   phone:profile.phone||nPhone.value,website:"",condition:"Used",ownerId:profile.id,sellerName:profile.name,sellerCity:profile.city||nCity.value,certified:false,featured:false,inspected:false,
    doors:4,cylinders:"N/A",color:"N/A",accident:"ثبت نشده",service:"ثبت نشده",
    aftermarket:"ثبت نشده",engine:"N/A",drive:"N/A",regional:"GCC Specs",owners:"N/A",
    warranty:"NO",description:nDesc.value,media:media,
