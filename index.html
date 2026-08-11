@@ -1,15 +1,303 @@
-logo = Path("/mnt/data/a_clean_graphic_app_icon_style_image_overall_sce.png") if logo.exists(): shutil.copy2(logo, base / "assets" / "icon.png")
-package = { "name": "afghan-motors", "version": "1.0.0", "private": True, "main": "expo-router/entry", "scripts": { "start": "expo start", "android": "expo start --android", "ios": "expo start --ios", "web": "expo start --web" }, "dependencies": { "@expo/vector-icons": "^15.0.0", "@react-native-async-storage/async-storage": "2.2.0", "expo": "~54.0.0", "expo-image-picker": "~17.0.0", "expo-status-bar": "~3.0.0", "react": "19.1.0", "react-native": "0.81.4", "react-native-safe-area-context": "~5.6.0" }, "devDependencies": {} }
-app_json = { "expo": { "name": "Afghan Motors", "slug": "afghan-motors", "version": "1.0.0", "orientation": "portrait", "userInterfaceStyle": "light", "icon": "./assets/icon.png", "android": { "package": "com.afghanmotors.app", "versionCode": 1 }, "ios": { "bundleIdentifier": "com.afghanmotors.app" } } }
-(base / "package.json").write_text(json.dumps(package, ensure_ascii=False, indent=2), encoding="utf-8") (base / "app.json").write_text(json.dumps(app_json, ensure_ascii=False, indent=2), encoding="utf-8")
-src = r'''import React, {useEffect, useMemo, useState} from "react"; import {Alert, FlatList, I18nManager, Linking, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View} from "react-native"; import AsyncStorage from "@react-native-async-storage/async-storage"; import {StatusBar} from "expo-status-bar"; import * as ImagePicker from "expo-image-picker"; import {Ionicons} from "@expo/vector-icons";
-const T = { fa:{title:"موتر افغانستان", buy:"خرید موتر", sell:"فروش موتر", profile:"پروفایل", search:"جستجوی برند، مدل یا سال...", city:"شهر", phone:"شماره واتساپ", save:"ذخیره", report:"گزارش آگهی", delete:"حذف آگهی", admin:"مدیر", details:"جزئیات موتر", photos:"عکس و ویدیو", add:"افزودن رسانه", no:"هنوز آگهی ثبت نشده است"}, ps:{title:"افغان موټر", buy:"موټر اخیستل", sell:"موټر پلورل", profile:"پروفایل", search:"د برانډ، ماډل یا کال لټون...", city:"ښار", phone:"د واټساپ شمېره", save:"ساتل", report:"اعلان راپورول", delete:"اعلان ړنګول", admin:"مدیر", details:"د موټر معلومات", photos:"انځور او ویډیو", add:"رسنۍ زیاتول", no:"تر اوسه اعلان نشته"}, en:{title:"Afghan Motors", buy:"Buy Car", sell:"Sell Car", profile:"Profile", search:"Search make, model or year...", city:"City", phone:"WhatsApp number", save:"Save", report:"Report listing", delete:"Delete listing", admin:"Admin", details:"Car details", photos:"Photos & videos", add:"Add media", no:"No listings yet"} }; const demo = [ {id:"1",brand:"Toyota",model:"Land Cruiser",year:"2024",price:"85000",city:"Kabul",ownerId:"demo",phone:"937000000000",media:[]}, {id:"2",brand:"Mercedes-Benz",model:"A-Class",year:"2024",price:"114999",city:"Kabul",ownerId:"demo",phone:"937000000001",media:[]} ];
-export default function App(){ const [lang,setLang]=useState("fa"); const t=T[lang]; const [profile,setProfile]=useState({id:"user-"+Date.now(),name:"",city:"",phone:""}); const [cars,setCars]=useState(demo); const [screen,setScreen]=useState("home"); const [selected,setSelected]=useState(null); const [search,setSearch]=useState(""); const [profileOpen,setProfileOpen]=useState(false); const [sellOpen,setSellOpen]=useState(false); const [newCar,setNewCar]=useState({brand:"",model:"",year:"",price:"",city:"",phone:"",media:[]});
-useEffect(()=>{(async()=>{ const p=await AsyncStorage.getItem("afghanProfile"); if(p)setProfile(JSON.parse(p)); const c=await AsyncStorage.getItem("afghanCars"); if(c)setCars(JSON.parse(c)); })()},[]);
-const filtered=useMemo(()=>cars.filter(c=> ${c.brand} ${c.model} ${c.year} ${c.city}.toLowerCase().includes(search.toLowerCase()) ),[cars,search]);
-async function saveProfile(){ await AsyncStorage.setItem("afghanProfile",JSON.stringify(profile)); setProfileOpen(false); Alert.alert("Afghan Motors", lang==="en"?"Profile saved":"پروفایل ذخیره شد"); } async function pickMedia(){ const r=await ImagePicker.launchImageLibraryAsync({mediaTypes:["images","videos"],allowsMultipleSelection:true,selectionLimit:0}); if(!r.canceled) setNewCar(x=>({...x,media:[...x.media,...r.assets.map(a=>a.uri)]})); } async function addCar(){ if(!newCar.brand||!newCar.model||!newCar.price){Alert.alert("Afghan Motors","برند، مدل و قیمت الزامی است");return} const car={...newCar,id:Date.now().toString(),ownerId:profile.id,phone:profile.phone}; const next=[car,...cars]; setCars(next); await AsyncStorage.setItem("afghanCars",JSON.stringify(next)); setSellOpen(false); setNewCar({brand:"",model:"",year:"",price:"",city:profile.city||"",phone:profile.phone||"",media:[]}); } function whatsapp(c){ if(!c.phone){Alert.alert("Afghan Motors","شماره واتساپ ثبت نشده است");return} const text=encodeURIComponent(سلام، آگهی ${c.brand} ${c.model} ${c.year} را در Afghan Motors دیدم.\nقیمت: ${c.price} افغانی\nلینک آگهی: afghanmotors://car/${c.id}); Linking.openURL(https://wa.me/${c.phone}?text=${text}); } async function removeCar(c){ if(c.ownerId!==profile.id){Alert.alert("Afghan Motors","فقط صاحب آگهی می‌تواند آن را حذف کند");return} const next=cars.filter(x=>x.id!==c.id); setCars(next); await AsyncStorage.setItem("afghanCars",JSON.stringify(next)); setSelected(null); } function report(c){Alert.alert(t.report,lang==="en"?"The report will be sent to the admin.":"گزارش برای مدیر ارسال می‌شود.")} return  {t.title}<Pressable onPress={()=>setProfileOpen(true)}> {["fa","ps","en"].map(x=><Pressable key={x} onPress={()=>setLang(x)} style={[s.langBtn,lang===x&&s.langActive]}>{x==="fa"?"فارسی":x==="ps"?"پښتو":"English"})} <TextInput value={search} onChangeText={setSearch} placeholder={t.search} style={{flex:1,textAlign:lang==="en"?"left":"right"}}/> <Pressable style={s.primary} onPress={()=>setSellOpen(true)}>{t.sell}<Pressable style={s.secondary} onPress={()=>setScreen("home")}>{t.buy} <FlatList data={filtered} keyExtractor={x=>x.id} contentContainerStyle={{padding:16,paddingBottom:100}} ListEmptyComponent={{t.no}} renderItem={({item:c})=><Pressable style={s.card} onPress={()=>setSelected(c)}> {c.brand} {c.model}{c.price} AFN {c.year}  •  {c.city}  •  {c.media?.length||0} media <Pressable style={s.whatsapp} onPress={()=>whatsapp(c)}>WhatsApp<Pressable style={s.outline} onPress={()=>setSelected(c)}>{t.details} )} /> <Pressable onPress={()=>setScreen("home")}>{t.buy}<Pressable onPress={()=>setSellOpen(true)}>{t.sell}<Pressable onPress={()=>setProfileOpen(true)}>{t.profile}
-<Pressable onPress={()=>setSelected(null)}>‹{selected&&{selected.brand} {selected.model}{selected.price} AFN{selected.year} • {selected.city}{t.details}{Object.entries({Brand:selected.brand,Model:selected.model,Year:selected.year,City:selected.city,Price:selected.price,WhatsApp:selected.phone||"-"}).map(([k,v])=>{k}{v})}{t.photos}{selected.media?.length||0} files<Pressable style={s.whatsapp} onPress={()=>whatsapp(selected)}>WhatsApp<Pressable style={s.report} onPress={()=>report(selected)}>{t.report}{selected.ownerId===profile.id&&<Pressable style={s.delete} onPress={()=>removeCar(selected)}>{t.delete}}}
-<Pressable onPress={()=>setProfileOpen(false)}>‹{t.profile}<TextInput style={s.input} placeholder="Name / نوم" value={profile.name} onChangeText={v=>setProfile({...profile,name:v})}/><TextInput style={s.input} placeholder={t.city} value={profile.city} onChangeText={v=>setProfile({...profile,city:v})}/><TextInput style={s.input} placeholder={t.phone} keyboardType="phone-pad" value={profile.phone} onChangeText={v=>setProfile({...profile,phone:v.replace(/\D/g,"")})}/>{t.save}
-<Pressable onPress={()=>setSellOpen(false)}>‹{t.sell}<TextInput style={s.input} placeholder="Brand / برند" value={newCar.brand} onChangeText={v=>setNewCar({...newCar,brand:v})}/><TextInput style={s.input} placeholder="Model / مدل" value={newCar.model} onChangeText={v=>setNewCar({...newCar,model:v})}/><TextInput style={s.input} placeholder="Year / کال" keyboardType="numeric" value={newCar.year} onChangeText={v=>setNewCar({...newCar,year:v})}/><TextInput style={s.input} placeholder="Price / قیمت" keyboardType="numeric" value={newCar.price} onChangeText={v=>setNewCar({...newCar,price:v})}/><TextInput style={s.input} placeholder={t.city} value={newCar.city} onChangeText={v=>setNewCar({...newCar,city:v})}/>{t.add} ({newCar.media.length}){t.save}  }
-const s=StyleSheet.create({ root:{flex:1,backgroundColor:"#f7f8fa"},header:{height:65,paddingHorizontal:18,flexDirection:"row",alignItems:"center",justifyContent:"space-between",backgroundColor:"#fff"},logo:{fontSize:22,fontWeight:"800",color:"#173f73"},lang:{flexDirection:"row",gap:8,padding:10,justifyContent:"center"},langBtn:{paddingHorizontal:12,paddingVertical:7,borderRadius:18,backgroundColor:"#e9edf3"},langActive:{backgroundColor:"#d7e7fb"},search:{marginHorizontal:16,paddingHorizontal:12,height:50,borderRadius:12,backgroundColor:"#fff",flexDirection:"row",alignItems:"center",gap:8},actions:{flexDirection:"row",gap:10,padding:16},primary:{backgroundColor:"#173f73",padding:14,borderRadius:11,alignItems:"center",marginTop:10},primaryText:{color:"#fff",fontWeight:"700"},secondary:{backgroundColor:"#fff",padding:14,borderRadius:11,flex:1,alignItems:"center"},secondaryText:{color:"#173f73",fontWeight:"700"},card:{backgroundColor:"#fff",borderRadius:16,padding:16,marginBottom:12,elevation:2},carTop:{flexDirection:"row",justifyContent:"space-between",alignItems:"center"},carName:{fontSize:18,fontWeight:"800"},price:{color:"#b07b00",fontWeight:"800"},meta:{color:"#777",marginTop:8},row:{flexDirection:"row",gap:8,marginTop:12},whatsapp:{backgroundColor:"#20b858",padding:12,borderRadius:10,flex:1,alignItems:"center"},white:{color:"#fff",fontWeight:"700"},outline:{borderWidth:1,borderColor:"#ccd3dc",padding:12,borderRadius:10,flex:1,alignItems:"center"},bottom:{position:"absolute",bottom:0,left:0,right:0,height:70,backgroundColor:"#fff",borderTopWidth:1,borderColor:"#ddd",flexDirection:"row",justifyContent:"space-around",alignItems:"center"},empty:{textAlign:"center",padding:40,color:"#777"},modal:{flex:1,backgroundColor:"#fff",padding:18},back:{fontSize:42,color:"#173f73"},big:{fontSize:28,fontWeight:"800",marginVertical:10},priceBig:{fontSize:22,fontWeight:"800",color:"#b07b00"},section:{fontSize:20,fontWeight:"800",marginTop:22,marginBottom:10},grid:{flexDirection:"row",flexWrap:"wrap",gap:10},detail:{width:"47%",backgroundColor:"#f5f6f8",padding:12,borderRadius:10},label:{color:"#888",marginBottom:5},input:{backgroundColor:"#f5f6f8",padding:14,borderRadius:10,marginVertical:7},report:{backgroundColor:"#fff0f0",padding:12,borderRadius:10,flex:1,alignItems:"center"},delete:{backgroundColor:"#d62828",padding:14,borderRadius:10,alignItems:"center",marginTop:10} }); ''' (base / "App.js").write_text(src, encoding="utf-8")
-readme = """# Afghan Motors | موتر افغانستان
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مارکت افغان | خرید و فروش موتر</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#0758b7;--dark:#172033;--muted:#7d8794;--green:#12a85b;--orange:#ffab00;--bg:#f5f6f8}
+body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
+.header{background:linear-gradient(135deg,#07377f,#1268d1);color:#fff;padding:16px 4% 28px}
+.topbar,.hero,.container,.footer-inner{max-width:1200px;margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-size:25px;font-weight:900}.logo span{color:#ffd12a}
+.nav{display:flex;gap:20px}.nav button{background:transparent;color:#fff}
+.lang{background:#fff!important;color:var(--blue)!important;padding:8px 14px;border-radius:20px}
+.hero{padding-top:32px}.hero h1{font-size:36px;margin-bottom:8px}.hero p{opacity:.9;margin-bottom:22px}
+.searchbox{background:#fff;padding:10px;border-radius:17px;display:flex;box-shadow:0 10px 30px #0003}
+.searchbox input{flex:1;border:0;outline:0;padding:14px;font-size:16px;color:#222}
+.searchbtn{background:var(--orange);padding:0 25px;border-radius:11px;font-weight:bold}
+.container{padding:0 15px;margin:28px auto}.section-title{display:flex;justify-content:space-between;align-items:center;margin:28px 0 16px}
+.section-title h2{font-size:22px}.seeall{color:var(--blue);background:transparent}
+.tabs{display:flex;gap:10px;overflow:auto;padding:4px 0 12px}
+.tab{background:#fff;border:1px solid #e6e8ec;padding:11px 22px;border-radius:25px;white-space:nowrap}
+.tab.active{background:var(--blue);color:#fff}
+.body-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.body-card,.make-card{background:#fff;border:1px solid #e6e8ec;border-radius:17px;padding:15px;text-align:center;box-shadow:0 3px 12px #00000008;transition:.2s}
+.body-card:hover,.make-card:hover{transform:translateY(-3px)}
+.body-card img{width:100%;height:75px;object-fit:contain}.body-card div{margin-top:8px;color:#666}
+.make-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}.make-card{min-width:145px}.make-card img{width:70px;height:55px;object-fit:contain}.make-card div{color:#666;margin-top:5px}
+.filters{background:#fff;padding:15px;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;box-shadow:0 3px 15px #00000009}
+.filters input,.filters select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;outline:none;background:#fff}
+.filter-btn{background:var(--blue);color:#fff;border-radius:10px;font-weight:bold}
+.cars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 18px #0000000d}
+.image-wrap{position:relative}.car-img{display:block;width:100%;height:220px;object-fit:cover}
+.badges{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px}.badge{color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:bold}.featured{background:#c21865}.certified{background:#28a957}.inspected{background:#555}
+.card-tools{position:absolute;top:12px;left:12px;display:flex;gap:8px}.round{width:40px;height:40px;border-radius:50%;background:#fff;font-size:20px}
+.card-body{padding:15px}.price{font-size:23px;font-weight:900;margin:8px 0;color:#222}.monthly{color:#e29a00;font-size:14px;margin-bottom:8px}.car-title{font-size:18px;font-weight:bold}.location{color:#9298a0;margin:8px 0}.specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;color:#646b75;border-top:1px solid #eee;padding-top:12px;font-size:13px}.actions{display:grid;grid-template-columns:1fr 1.3fr;gap:8px;margin-top:14px}.call{background:var(--blue);color:#fff;padding:12px;border-radius:9px}.visit{background:#ff9f00;color:#fff;padding:12px;border-radius:9px}.empty{background:#fff;padding:35px;text-align:center;border-radius:15px;grid-column:1/-1}
+.sell-section{margin-top:38px;background:linear-gradient(135deg,#062f72,#0870d8);color:#fff;border-radius:22px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:20px}.sell-btn{background:#ffc21c;color:#111;padding:14px 24px;border-radius:10px;font-weight:bold}
+.footer{background:#111827;color:#cbd5e1;margin-top:45px;padding:38px 5%}.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footer h3{color:#fff;margin-bottom:10px}.footer p{line-height:2}
+.bottom-nav{display:none}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:1000;padding:15px;overflow:auto}.modal-box{background:#fff;max-width:900px;margin:25px auto;border-radius:22px;padding:20px}.close{background:#eee;border-radius:50%;width:38px;height:38px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}.detail-gallery img{width:100%;height:180px;object-fit:cover;border-radius:10px}.detail-gallery img:first-child{grid-row:span 2;height:368px}
+.detail-top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin:18px 0}.detail-price{font-size:28px;font-weight:900}.detail-actions{display:flex;gap:8px}.detail-actions button{padding:12px 18px;border-radius:9px}
+.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.detail-item{background:#fff;border-radius:13px;padding:15px;box-shadow:0 3px 14px #00000010;border:1px solid #eee}.detail-item .label{color:#9aa0a8;font-size:13px;margin-bottom:8px}.detail-item .value{font-weight:600}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-group label{display:block;font-size:13px;margin-bottom:6px}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px}.form-group textarea{height:90px}.full{grid-column:1/-1}.submit{width:100%;background:var(--blue);color:#fff;padding:14px;border-radius:10px;font-weight:bold}
+.toast{position:fixed;bottom:80px;right:20px;background:#111827;color:#fff;padding:13px 18px;border-radius:10px;display:none;z-index:2000}
+@media(max-width:850px){.nav{display:none}.hero h1{font-size:27px}.body-grid{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.cars{grid-template-columns:1fr 1fr}.footer-inner{grid-template-columns:1fr}.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;z-index:900;box-shadow:0 -3px 15px #0002;justify-content:space-around}.bottom-nav button{background:#fff;color:#697384;font-size:11px}.bottom-nav span{display:block;font-size:20px}.footer{padding-bottom:85px}}
+@media(max-width:520px){.body-grid{grid-template-columns:repeat(2,1fr)}.cars{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.detail-gallery{grid-template-columns:1fr 1fr}.detail-gallery img:first-child{grid-column:1/-1;grid-row:auto;height:220px}.detail-gallery img{height:110px}.details-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.detail-top{align-items:flex-start;flex-direction:column}.searchbox{flex-direction:column}.searchbtn{padding:13px}}
+
+/* --- Multi photo/video gallery update --- */
+.media-input{border:2px dashed #b8c0cc!important;background:#f8fafc!important;padding:18px!important}
+.media-help{font-size:12px;color:#7b8490;margin-top:6px;line-height:1.8}
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.preview-item{position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:1/1}
+.preview-item img,.preview-item video{width:100%;height:100%;object-fit:cover}
+.preview-item .remove-media{position:absolute;top:5px;left:5px;width:27px;height:27px;border-radius:50%;background:#e53935;color:#fff;font-weight:bold}
+.detail-media{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:18px}
+.detail-media .media-main{grid-row:span 2;height:390px}
+.detail-media .media-thumb{height:190px}
+.detail-media img,.detail-media video{width:100%;height:100%;object-fit:cover;border-radius:12px;background:#111}
+.media-count{position:absolute;bottom:10px;right:10px;background:#000b;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px}
+.card-gallery{position:relative}
+.gallery-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.gallery-dot{width:7px;height:7px;border-radius:50%;background:#fff8}
+.gallery-dot.active{background:#fff}
+.inline-summary{margin-top:18px;background:#f7f8fa;border-radius:14px;padding:15px}
+.inline-summary h3{margin-bottom:10px}
+@media(max-width:520px){
+ .preview-grid{grid-template-columns:repeat(3,1fr)}
+ .detail-media{grid-template-columns:1fr 1fr}
+ .detail-media .media-main{grid-column:1/-1;grid-row:auto;height:250px}
+ .detail-media .media-thumb{height:120px}
+}
+
+</style>
+</head>
+<body>
+<header class="header" id="home">
+<div class="topbar">
+<div class="logo">🚘 مارکت <span>افغان</span></div>
+<nav class="nav">
+<button onclick="go('cars')">خرید موتر</button><button onclick="openSell()">فروش موتر</button><button onclick="showFavorites()">❤️ علاقه‌مندی‌ها</button>
+</nav>
+<button class="lang" onclick="toggleLanguage()">English</button>
+</div>
+<div class="hero">
+<h1 id="heroTitle">موتر دلخواهت را پیدا کن</h1>
+<p id="heroText">خرید و فروش موتر در سراسر افغانستان</p>
+<div class="searchbox"><input id="search" placeholder="برند، مدل یا نسخه را جستجو کنید..." oninput="renderCars()"><button class="searchbtn" onclick="renderCars()">🔎 جستجو</button></div>
+</div>
+</header>
+
+<main class="container">
+<div class="tabs">
+<button class="tab active" onclick="setCondition('')">همه</button><button class="tab" onclick="setCondition('Used')">دست‌دوم</button><button class="tab" onclick="setCondition('New')">نو</button><button class="tab" onclick="setCondition('Certified')">تأییدشده</button><button class="tab" onclick="setCondition('Export')">صادرات</button>
+</div>
+
+<div class="section-title"><h2>🚗 نوع موتر</h2></div>
+<div class="body-grid" id="bodyGrid"></div>
+
+<div class="section-title"><h2>⭐ برندهای محبوب</h2><button class="seeall" onclick="clearMake()">همه برندها</button></div>
+<div class="make-row" id="makeRow"></div>
+
+<div class="section-title" id="cars"><h2>🔎 فیلتر موترها</h2></div>
+<div class="filters">
+<select id="brand" onchange="renderCars()"><option value="">همه برندها</option></select>
+<select id="type" onchange="renderCars()"><option value="">همه نوع‌ها</option></select>
+<select id="fuel" onchange="renderCars()"><option value="">همه سوخت‌ها</option><option>بنزین</option><option>دیزل</option><option>هیبرید</option><option>برقی</option></select>
+<select id="gear" onchange="renderCars()"><option value="">همه گیربکس‌ها</option><option>اتومات</option><option>دستی</option></select>
+<select id="city" onchange="renderCars()"><option value="">همه شهرها</option><option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال‌آباد</option><option>شارجه</option><option>دبی</option></select>
+<select id="year" onchange="renderCars()"><option value="">همه سال‌ها</option><option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option></select>
+<input id="min" type="number" placeholder="حداقل قیمت" oninput="renderCars()"><input id="max" type="number" placeholder="حداکثر قیمت" oninput="renderCars()">
+<button class="filter-btn" onclick="resetFilters()">پاک کردن فیلتر</button>
+</div>
+
+<div class="section-title"><h2>🚘 آخرین آگهی‌ها <span id="count"></span></h2></div>
+<div class="cars" id="carList"></div>
+
+<section class="sell-section"><div><h2>موترت را سریع بفروش</h2><p>آگهی خود را ثبت کن و موترت را به خریداران معرفی کن.</p></div><button class="sell-btn" onclick="openSell()">➕ ثبت آگهی</button></section>
+</main>
+
+<footer class="footer"><div class="footer-inner"><div><h3>مارکت افغان</h3><p>پلتفرم خرید و فروش موتر در افغانستان.</p></div><div><h3>خرید موتر</h3><p>نو و دست‌دوم</p><p>آگهی‌های ویژه</p></div><div><h3>فروش موتر</h3><p>ثبت آگهی</p><p>آگهی‌های من</p></div></div></footer>
+
+<div class="bottom-nav"><button onclick="go('home')"><span>🏠</span>خانه</button><button onclick="go('cars')"><span>🚘</span>خرید</button><button onclick="openSell()"><span>➕</span>فروش</button><button onclick="showFavorites()"><span>❤️</span>علاقه</button><button onclick="alert('پروفایل در نسخه بعدی با ورود کاربر فعال می‌شود')"><span>👤</span>پروفایل</button></div>
+
+<!-- Details -->
+<div class="modal" id="detailModal"><div class="modal-box"><div class="modal-head"><h2 id="detailTitle">جزئیات موتر</h2><button class="close" onclick="closeModal('detailModal')">✕</button></div><div id="detailContent"></div></div></div>
+
+<!-- Sell -->
+<div class="modal" id="sellModal"><div class="modal-box"><div class="modal-head"><h2>ثبت آگهی موتر</h2><button class="close" onclick="closeModal('sellModal')">✕</button></div>
+<form onsubmit="addCar(event)"><div class="form-grid">
+<div class="form-group"><label>برند</label><input id="nBrand" required></div><div class="form-group"><label>مدل</label><input id="nModel" required></div>
+<div class="form-group"><label>سال</label><input id="nYear" type="number" required></div><div class="form-group"><label>قیمت</label><input id="nPrice" type="number" required></div>
+<div class="form-group"><label>کیلومتر</label><input id="nKm" type="number" required></div><div class="form-group"><label>نوع</label><select id="nType"></select></div>
+<div class="form-group"><label>سوخت</label><select id="nFuel"><option>بنزین</option><option>دیزل</option><option>هیبرید</option><option>برقی</option></select></div>
+<div class="form-group"><label>گیربکس</label><select id="nGear"><option>اتومات</option><option>دستی</option></select></div>
+<div class="form-group"><label>شهر</label><select id="nCity"><option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال‌آباد</option></select></div>
+<div class="form-group"><label>شماره تماس</label><input id="nPhone" required></div>
+<div class="form-group full">
+<label>📷 عکس و 🎥 ویدیوهای موتر</label>
+<input id="nMedia" class="media-input" type="file" accept="image/*,video/*" multiple onchange="previewMedia(event)">
+<div class="media-help">هر تعداد عکس و ویدیو که لازم داری انتخاب کن. خریدار همه رسانه‌ها را داخل خود آگهی می‌بیند و لازم نیست لینک دیگری باز کند.</div>
+<div id="mediaPreview" class="preview-grid"></div>
+</div>
+<div class="form-group full"><label>توضیحات</label><textarea id="nDesc"></textarea></div>
+</div><button class="submit">🚀 انتشار آگهی</button></form></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const bodyTypes=[
+["SUV","🚙"],["Sedan","🚘"],["Coupe","🏎️"],["Hatchback","🚗"],["Convertible","🔄"],["Pickup Truck","🛻"],["Wagon","🚘"],["Minivan","🚐"],["Truck","🚚"],["Bus","🚌"],["Other","⚙️"]
+];
+const makes=["Toyota","Nissan","Hyundai","Mercedes-Benz","BMW","Kia","Honda","Ford","Lexus","MG","Mitsubishi"];
+const logos={Toyota:"https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_carlogo.svg",Nissan:"https://upload.wikimedia.org/wikipedia/commons/2/23/Nissan_2020_logo.svg",Hyundai:"https://upload.wikimedia.org/wikipedia/commons/4/44/Hyundai_Motor_Company_logo.svg",Kia:"https://upload.wikimedia.org/wikipedia/commons/4/47/KIA_logo2.svg"};
+const imgs={
+SUV:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=500&q=80",
+Sedan:"https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=500&q=80",
+Coupe:"https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=500&q=80",
+Hatchback:"https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=500&q=80",
+"Pickup Truck":"https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=500&q=80",
+Wagon:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=500&q=80",
+Minivan:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=500&q=80",
+Truck:"https://images.unsplash.com/photo-1586191582151-f73872dfd183?auto=format&fit=crop&w=500&q=80",
+Bus:"https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=500&q=80"
+};
+let cars=[
+{id:1,brand:"Mercedes-Benz",model:"A-Class",year:2024,km:57000,fuel:"بنزین",gear:"اتومات",type:"Sedan",city:"دبی",price:114999,condition:"Used",certified:true,featured:true,inspected:true,doors:4,cylinders:3,color:"Black",accident:"بدون تصادف",service:"بله",aftermarket:"بله",engine:"1300",drive:"Front Wheel Drive",regional:"GCC Specs",owners:"N/A",warranty:"NO",phone:"0700000000",website:"https://example.com",images:["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1000&q=80"]},
+{id:2,brand:"MG",model:"RX5",year:2024,km:35800,fuel:"بنزین",gear:"اتومات",type:"SUV",city:"شارجه",price:55000,condition:"Used",certified:true,featured:true,inspected:true,doors:5,cylinders:4,color:"Black",accident:"بدون تصادف",service:"بله",aftermarket:"بله",engine:"1500",drive:"Front Wheel Drive",regional:"GCC Specs",owners:"1",warranty:"NO",phone:"0700000000",website:"https://example.com",images:["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1000&q=80"]},
+{id:3,brand:"Toyota",model:"Land Cruiser",year:2023,km:32000,fuel:"بنزین",gear:"اتومات",type:"SUV",city:"کابل",price:185000,condition:"Used",certified:true,featured:false,inspected:true,doors:5,cylinders:6,color:"White",accident:"بدون تصادف",service:"بله",aftermarket:"نه",engine:"3500",drive:"4WD",regional:"GCC Specs",owners:"1",warranty:"بله",phone:"0700000000",website:"https://example.com",images:["https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1000&q=80"]},
+{id:4,brand:"BMW",model:"M4",year:2024,km:18000,fuel:"بنزین",gear:"اتومات",type:"Coupe",city:"کابل",price:210000,condition:"New",certified:false,featured:true,inspected:true,doors:2,cylinders:6,color:"Black",accident:"بدون تصادف",service:"بله",aftermarket:"نه",engine:"3000",drive:"Rear Wheel Drive",regional:"GCC Specs",owners:"N/A",warranty:"بله",phone:"0700000000",website:"https://example.com",images:["https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1000&q=80"]},
+{id:5,brand:"Toyota",model:"Corolla",year:2022,km:45000,fuel:"بنزین",gear:"اتومات",type:"Sedan",city:"مزار شریف",price:65000,condition:"Used",certified:false,featured:false,inspected:true,doors:4,cylinders:4,color:"White",accident:"بدون تصادف",service:"بله",aftermarket:"نه",engine:"1800",drive:"Front Wheel Drive",regional:"GCC Specs",owners:"2",warranty:"NO",phone:"0700000000",website:"https://example.com",images:["https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1000&q=80"]}
+];
+const stored=JSON.parse(localStorage.getItem("afghanCars")||"[]"); cars=[...stored,...cars];
+let favorites=JSON.parse(localStorage.getItem("afghanFav")||"[]"), condition="", make="", lang="fa";
+
+function money(n){return new Intl.NumberFormat("fa-AF").format(n)}
+function previewMedia(e){
+ const box=document.getElementById("mediaPreview"); box.innerHTML="";
+ [...e.target.files].forEach((file,i)=>{
+   const url=URL.createObjectURL(file);
+   const el=file.type.startsWith("video/")?`<video src="${url}" muted controls></video>`:`<img src="${url}">`;
+   box.insertAdjacentHTML("beforeend",`<div class="preview-item">${el}<button type="button" class="remove-media" onclick="removeSelectedMedia(${i})">×</button></div>`);
+ });
+}
+function removeSelectedMedia(i){
+ const input=document.getElementById("nMedia"), dt=new DataTransfer();
+ [...input.files].forEach((f,n)=>{if(n!==i)dt.items.add(f)});
+ input.files=dt.files; previewMedia({target:input});
+}
+
+function init(){
+ document.getElementById("bodyGrid").innerHTML=bodyTypes.map(([t,i])=>`<button class="body-card" onclick="setType('${t}')"><img src="${imgs[t]||imgs.SUV}"><div>${t}</div></button>`).join("");
+ document.getElementById("makeRow").innerHTML=makes.map(m=>`<button class="make-card" onclick="setMake('${m}')">${logos[m]?`<img src="${logos[m]}" onerror="this.style.display='none'">`:"🚘"}<div>${m}</div></button>`).join("");
+ document.getElementById("brand").innerHTML='<option value="">همه برندها</option>'+makes.map(m=>`<option>${m}</option>`).join("");
+ document.getElementById("type").innerHTML='<option value="">همه نوع‌ها</option>'+bodyTypes.map(x=>`<option>${x[0]}</option>`).join("");
+ document.getElementById("nType").innerHTML=bodyTypes.map(x=>`<option>${x[0]}</option>`).join("");
+ renderCars();
+}
+function renderCars(){
+ const q=document.getElementById("search").value.toLowerCase(), b=document.getElementById("brand").value||make, t=document.getElementById("type").value;
+ const fuel=document.getElementById("fuel").value, gear=document.getElementById("gear").value, city=document.getElementById("city").value, year=document.getElementById("year").value;
+ const min=+document.getElementById("min").value||0,max=+document.getElementById("max").value||Infinity;
+ const result=cars.filter(c=>(`${c.brand} ${c.model} ${c.type} ${c.city}`).toLowerCase().includes(q)&&(!b||c.brand===b)&&(!t||c.type===t)&&(!fuel||c.fuel===fuel)&&(!gear||c.gear===gear)&&(!city||c.city===city)&&(!year||String(c.year)===year)&&c.price>=min&&c.price<=max&&(!condition||c.condition===condition));
+ document.getElementById("count").textContent=`(${result.length})`;
+ document.getElementById("carList").innerHTML=result.length?result.map(card).join(""):`<div class="empty"><h3>😔 موتر پیدا نشد</h3><p>فیلترها را تغییر بده.</p></div>`;
+}
+function mediaFor(c){
+ const m=(c.media&&c.media.length)?c.media:[...(c.images||[]).map(src=>({type:"image",src}))];
+ return m.length?m:[{type:"image",src:imgs[c.type]||imgs.SUV}];
+}
+function mediaElement(m, cls=""){
+ return m.type==="video"
+   ? `<video class="${cls}" src="${m.src}" muted playsinline preload="metadata"></video>`
+   : `<img class="${cls}" src="${m.src}" onerror="this.src='${imgs.SUV}'">`;
+}
+function card(c){
+ const liked=favorites.includes(c.id), monthly=Math.round(c.price/72), ms=mediaFor(c);
+ return `<article class="card" onclick="openDetails(${c.id})">
+ <div class="image-wrap card-gallery">${mediaElement(ms[0],"car-img")}
+ <div class="media-count">📷 ${ms.filter(x=>x.type==="image").length} &nbsp; 🎥 ${ms.filter(x=>x.type==="video").length}</div>
+ <div class="badges">${c.certified?'<span class="badge certified">CERTIFIED</span>':''}${c.featured?'<span class="badge featured">FEATURED</span>':''}${c.inspected?'<span class="badge inspected">INSPECTED</span>':''}</div>
+ <div class="card-tools"><button class="round" onclick="event.stopPropagation();shareCar(${c.id})">↗</button><button class="round" onclick="event.stopPropagation();toggleFav(${c.id})">${liked?'❤️':'♡'}</button></div></div>
+ <div class="card-body"><div class="price">${money(c.price)} افغانی</div><div class="monthly">💳 حدود ${money(monthly)} در ماه</div><div class="car-title">${c.condition==='Used'?'دست‌دوم ':c.condition==='New'?'نو ':''}${c.brand} ${c.model} ${c.year}</div><div class="location">📍 ${c.city}</div>
+ <div class="specs"><div>📅 ${c.year}</div><div>🛣️ ${money(c.km)} KM</div><div>⚙️ ${c.gear}</div><div>⛽ ${c.fuel}</div><div>🌐 ${c.regional}</div><div>📸 ${ms.length} فایل</div></div>
+ <div class="actions"><button class="call" onclick="event.stopPropagation();callSeller('${c.phone||''}')">📞 تماس</button><button class="visit" onclick="event.stopPropagation();openDetails(${c.id})">👁️ دیدن جزئیات</button></div></div></article>`;
+}
+function openDetails(id){
+ const c=cars.find(x=>x.id===id); if(!c)return;
+ const ms=mediaFor(c);
+ const fields=[
+ ["سال مدل",c.year],["کیلومتر",money(c.km)+" KM"],["نوع سوخت",c.fuel],["گیربکس",c.gear],
+ ["موقعیت",c.city],["تعداد دروازه",c.doors||"N/A"],["تعداد سیلندر",c.cylinders||"N/A"],
+ ["رنگ بیرونی",c.color||"N/A"],["سابقه تصادف",c.accident||"N/A"],["سرویس",c.service||"N/A"],
+ ["After Market",c.aftermarket||"N/A"],["حجم موتور",c.engine||"N/A"],["نوع انتقال نیرو",c.drive||"N/A"],
+ ["مشخصات منطقه‌ای",c.regional||"N/A"],["مالکان قبلی",c.owners||"N/A"],["گارانتی",c.warranty||"N/A"]
+ ];
+ const mediaHtml=ms.map((m,i)=>`<div class="${i===0?'media-main':'media-thumb'}">${mediaElement(m)}</div>`).join("");
+ document.getElementById("detailTitle").textContent=`${c.brand} ${c.model} ${c.year}`;
+ document.getElementById("detailContent").innerHTML=`
+ <div class="detail-media">${mediaHtml}</div>
+ <div class="detail-top"><div><div class="detail-price">${money(c.price)} افغانی</div><p>📍 ${c.city} · ${c.condition} · 📷 ${ms.filter(x=>x.type==="image").length} عکس · 🎥 ${ms.filter(x=>x.type==="video").length} ویدیو</p></div>
+ <div class="detail-actions"><button class="call" onclick="callSeller('${c.phone||''}')">📞 تماس با فروشنده</button><button class="visit" onclick="shareCar(${c.id})">↗ اشتراک‌گذاری</button></div></div>
+ <div class="details-grid">${fields.map(f=>`<div class="detail-item"><div class="label">${f[0]}</div><div class="value">${f[1]}</div></div>`).join("")}</div>
+ <div class="inline-summary"><h3>📝 توضیحات فروشنده</h3><p style="line-height:2;color:#555">${c.description||"توضیحات اضافی برای این آگهی ثبت نشده است."}</p></div>
+ <div class="inline-summary"><h3>📌 اطلاعات مهم</h3><p style="line-height:2;color:#555">همه عکس‌ها، ویدیوها و مشخصات این موتر همین‌جا نمایش داده می‌شود؛ برای دیدن جزئیات نیازی به باز کردن سایت دیگری نیست.</p></div>`;
+ document.getElementById("detailModal").style.display="block"; document.body.style.overflow="hidden";
+}
+function closeModal(id){document.getElementById(id).style.display="none";document.body.style.overflow="auto"}
+function toggleFav(id){favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];localStorage.setItem("afghanFav",JSON.stringify(favorites));renderCars();toast(favorites.includes(id)?"❤️ ذخیره شد":"حذف شد")}
+function showFavorites(){const old=document.getElementById("search").value;document.getElementById("search").value="";const fav=cars.filter(c=>favorites.includes(c.id));document.getElementById("carList").innerHTML=fav.length?fav.map(card).join(""):`<div class="empty">❤️ هنوز آگهی مورد علاقه‌ای نداری.</div>`;go("cars")}
+function setType(t){document.getElementById("type").value=t;go("cars");renderCars()}
+function setMake(m){make=m;document.getElementById("brand").value=m;go("cars");renderCars()}
+function clearMake(){make="";document.getElementById("brand").value="";renderCars()}
+function setCondition(c){condition=c;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));event?.currentTarget?.classList.add("active");renderCars()}
+function resetFilters(){["search","brand","type","fuel","gear","city","year","min","max"].forEach(id=>document.getElementById(id).value="");condition="";make="";renderCars()}
+function go(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"})}
+function callSeller(p){if(p)location.href="tel:"+p;else toast("شماره فروشنده ثبت نشده است")}
+function visit(url){if(url&&url!=="https://example.com")window.open(url,"_blank");else toast("لینک سایت فروشنده ثبت نشده است")}
+async function shareCar(id){const c=cars.find(x=>x.id===id),text=`${c.brand} ${c.model} ${c.year} - ${money(c.price)} افغانی`;try{await navigator.share({title:text,text})}catch(e){navigator.clipboard?.writeText(text);toast("مشخصات آگهی کپی شد")}}
+function openSell(){document.getElementById("sellModal").style.display="block";document.body.style.overflow="hidden"}
+async function addCar(e){
+ e.preventDefault();
+ const files=[...(document.getElementById("nMedia").files||[])];
+ const media=[];
+ for(const file of files){
+   // Store selected media as data URLs for this demo/local version.
+   // A real production site should upload these files to cloud/server storage.
+   const data=await new Promise((resolve,reject)=>{
+     const r=new FileReader();
+     r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file);
+   });
+   media.push({type:file.type.startsWith("video/")?"video":"image",src:data,name:file.name});
+ }
+ const c={
+   id:Date.now(),brand:nBrand.value,model:nModel.value,year:+nYear.value,price:+nPrice.value,
+   km:+nKm.value,type:nType.value,fuel:nFuel.value,gear:nGear.value,city:nCity.value,
+   phone:nPhone.value,website:"",condition:"Used",certified:false,featured:false,inspected:false,
+   doors:4,cylinders:"N/A",color:"N/A",accident:"ثبت نشده",service:"ثبت نشده",
+   aftermarket:"ثبت نشده",engine:"N/A",drive:"N/A",regional:"GCC Specs",owners:"N/A",
+   warranty:"NO",description:nDesc.value,media:media,
+   images:media.filter(x=>x.type==="image").map(x=>x.src)
+ };
+ cars.unshift(c);
+ try{
+   const saved=cars.filter(x=>x.id>=Date.now()-10000);
+   localStorage.setItem("afghanCars",JSON.stringify(saved));
+ }catch(err){
+   // Keep the listing in the current page even if browser storage is full.
+   toast("⚠️ آگهی ثبت شد، اما حافظه مرورگر برای ذخیره همه ویدیوها کافی نیست.");
+ }
+ closeModal("sellModal"); e.target.reset();
+ document.getElementById("mediaPreview").innerHTML="";
+ renderCars(); toast("✅ آگهی با عکس و ویدیو ثبت شد");
+}
+function toast(t){const x=document.getElementById("toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",2200)}
+function toggleLanguage(){lang=lang==="fa"?"en":"fa";document.documentElement.dir=lang==="fa"?"rtl":"ltr";document.documentElement.lang=lang;document.querySelector(".lang").textContent=lang==="fa"?"English":"دری";document.getElementById("heroTitle").textContent=lang==="fa"?"موتر دلخواهت را پیدا کن":"Find your perfect car";document.getElementById("heroText").textContent=lang==="fa"?"خرید و فروش موتر در سراسر افغانستان":"Buy and sell cars across Afghanistan";document.getElementById("search").placeholder=lang==="fa"?"برند، مدل یا نسخه را جستجو کنید...":"Search by make, model or version..."}
+init();
+</script>
+</body>
+</html>
