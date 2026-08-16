@@ -34,7 +34,6 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .filters{background:var(--card);padding:15px;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;box-shadow:0 3px 15px #00000009}
 .filters input,.filters select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;outline:none;background:var(--card);color:var(--text)}
 .filter-btn{background:var(--blue);color:#fff;border-radius:10px;font-weight:bold;padding:12px}
-.sort-wrap{display:flex;align-items:center;gap:8px}.sort-wrap label{color:var(--muted);font-size:13px}
 .cars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px #0000000d;cursor:pointer}
 .image-wrap{position:relative}.car-img{display:block;width:100%;height:220px;object-fit:cover;background:#111}
@@ -46,4 +45,103 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .empty{background:var(--card);padding:35px;text-align:center;border-radius:15px;grid-column:1/-1;color:var(--text)}
 .sell-section{margin-top:38px;background:linear-gradient(135deg,#062f72,#0870d8);color:#fff;border-radius:22px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.sell-btn{background:#ffc21c;color:#111;padding:14px 24px;border-radius:10px;font-weight:bold}
 .footer{background:#111827;color:#cbd5e1;margin-top:45px;padding:38px 5%}.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footer h3{color:#fff;margin-bottom:10px}.footer p{line-height:2}
-.bottom-nav{display:none}
+@media(max-width:900px){.cars{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.body-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.cars{grid-template-columns:1fr}.hero h1{font-size:26px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="topbar">
+    <div class="logo">مارکت <span>افغان</span></div>
+    <div class="nav">
+      <button>خرید موتر</button>
+      <button>فروش موتر</button>
+      <button id="darkBtn" class="dark-toggle">🌙 دارک</button>
+      <button class="lang">دری</button>
+    </div>
+  </div>
+  <div class="hero">
+    <h1>موتر رویایی خود را پیدا کنید</h1>
+    <p>بیش از ۱۵۰۰ موتر تایید شده در کابل، هرات و مزار</p>
+    <div class="searchbox">
+      <input id="searchInput" placeholder="مثلا تویوتا کرولا ۲۰۱۸">
+      <button class="searchbtn" onclick="doSearch()">جستجو</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="section-title"><h2>بر اساس بدنه</h2></div>
+  <div class="body-grid">
+    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>سدان</div></div>
+    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>شاسی بلند</div></div>
+    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>پیکاپ</div></div>
+    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>هاچبک</div></div>
+    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>ون</div></div>
+  </div>
+
+  <div class="section-title"><h2>موترهای تازه</h2><button class="seeall">دیدن همه</button></div>
+  
+  <div class="filters">
+    <select id="brandFilter"><option value="">همه برندها</option><option>تویوتا</option><option>هیوندای</option><option>مرسدس</option></select>
+    <input id="yearFilter" type="number" placeholder="سال از ۲۰۱۵">
+    <input id="priceFilter" type="number" placeholder="قیمت تا">
+    <button class="filter-btn" onclick="doSearch()">اعمال فیلتر</button>
+  </div>
+
+  <div id="cars" class="cars" style="margin-top:20px"></div>
+
+  <div class="sell-section">
+    <div><h2>میخواهی موترت را بفروشی؟</h2><p>در ۳۰ دقیقه آگهی رایگان ثبت کن</p></div>
+    <button class="sell-btn">+ ثبت آگهی فروش</button>
+  </div>
+</div>
+
+<footer class="footer"><div class="footer-inner"><div><h3>مارکت افغان</h3><p>بزرگترین بازار آنلاین موتر در افغانستان</p></div><div><h3>لینک ها</h3><p>درباره ما<br>تماس</p></div><div><h3>تماس</h3><p>کابل - افغانستان</p></div></div></footer>
+
+<script>
+const allCars = [
+  {title:'تویوتا کرولا ۲۰۲۰', price:'$ 12,500', loc:'کابل', year:'۲۰۲۰ - ۸۵,۰۰۰ کیلومتر', fuel:'پطرول - اتومات', img:'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=600'},
+  {title:'هیوندای توسان ۲۰۱۹', price:'$ 18,900', loc:'هرات', year:'۲۰۱۹ - ۶۰,۰۰۰ کیلومتر', fuel:'دیزل - اتومات', img:'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=600'},
+  {title:'مرسدس بنز C200', price:'$ 22,000', loc:'مزار شریف', year:'۲۰۱۸ - ۴۵,۰۰۰ کیلومتر', fuel:'پطرول - اتومات', img:'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=600'}
+];
+
+function render(list){
+  const box = document.getElementById('cars');
+  if(!list.length){ box.innerHTML = '<div class="empty">موتر پیدا نشد</div>'; return; }
+  box.innerHTML = list.map(c=>`
+    <div class="card">
+      <div class="image-wrap">
+        <img class="car-img" src="${c.img}">
+        <div class="badges"><span class="badge certified">تایید شده</span></div>
+        <div class="card-tools"><span class="round">♡</span></div>
+      </div>
+      <div class="card-body">
+        <div class="car-title">${c.title}</div>
+        <div class="location">📍 ${c.loc}</div>
+        <div class="price">${c.price}</div>
+        <div class="specs"><span>📅 ${c.year}</span><span>⛽ ${c.fuel}</span></div>
+        <div class="actions"><button class="call">تماس</button><button class="visit">دیدن</button></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function doSearch(){
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const brand = document.getElementById('brandFilter').value.toLowerCase();
+  const filtered = allCars.filter(c => c.title.toLowerCase().includes(q) && c.title.toLowerCase().includes(brand));
+  render(filtered);
+}
+
+document.getElementById('darkBtn').onclick = ()=>{
+  document.documentElement.classList.toggle('dark');
+  document.body.classList.toggle('dark');
+};
+
+render(allCars);
+</script>
+
+</body>
+</html>
