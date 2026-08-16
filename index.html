@@ -34,6 +34,7 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .filters{background:var(--card);padding:15px;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;box-shadow:0 3px 15px #00000009}
 .filters input,.filters select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;outline:none;background:var(--card);color:var(--text)}
 .filter-btn{background:var(--blue);color:#fff;border-radius:10px;font-weight:bold;padding:12px}
+.sort-wrap{display:flex;align-items:center;gap:8px}.sort-wrap label{color:var(--muted);font-size:13px}
 .cars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px #0000000d;cursor:pointer}
 .image-wrap{position:relative}.car-img{display:block;width:100%;height:220px;object-fit:cover;background:#111}
@@ -45,103 +46,138 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .empty{background:var(--card);padding:35px;text-align:center;border-radius:15px;grid-column:1/-1;color:var(--text)}
 .sell-section{margin-top:38px;background:linear-gradient(135deg,#062f72,#0870d8);color:#fff;border-radius:22px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.sell-btn{background:#ffc21c;color:#111;padding:14px 24px;border-radius:10px;font-weight:bold}
 .footer{background:#111827;color:#cbd5e1;margin-top:45px;padding:38px 5%}.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footer h3{color:#fff;margin-bottom:10px}.footer p{line-height:2}
-@media(max-width:900px){.cars{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.body-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.cars{grid-template-columns:1fr}.hero h1{font-size:26px}}
+.bottom-nav{display:none}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:1000;padding:15px;overflow:auto}.modal-box{background:var(--card);max-width:900px;margin:25px auto;border-radius:22px;padding:20px;color:var(--text)}.close{background:#eee;border-radius:50%;width:38px;height:38px;color:#333}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}.detail-gallery img{width:100%;height:180px;object-fit:cover;border-radius:10px}.detail-gallery img:first-child{grid-row:span 2;height:368px}
+.detail-top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin:18px 0;flex-wrap:wrap}.detail-price{font-size:28px;font-weight:900;color:var(--text)}.detail-actions{display:flex;gap:8px;flex-wrap:wrap}.detail-actions button{padding:12px 18px;border-radius:9px}
+.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.detail-item{background:var(--card);border-radius:13px;padding:15px;box-shadow:0 3px 14px #00000010;border:1px solid var(--border)}.detail-item .label{color:#9aa0a8;font-size:13px;margin-bottom:8px}.detail-item .value{font-weight:600;color:var(--text)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-group label{display:block;font-size:13px;margin-bottom:6px;color:var(--text)}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;background:var(--card);color:var(--text)}.form-group textarea{height:90px}.full{grid-column:1/-1}.submit{width:100%;background:var(--blue);color:#fff;padding:14px;border-radius:10px;font-weight:bold}
+.toast{position:fixed;bottom:80px;right:20px;background:#111827;color:#fff;padding:13px 18px;border-radius:10px;display:none;z-index:2000}
+.media-input{border:2px dashed #b8c0cc!important;background:#f8fafc!important;padding:18px!important}
+.media-help{font-size:12px;color:#7b8490;margin-top:6px;line-height:1.8}
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.preview-item{position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:1/1}
+.preview-item img,.preview-item video{width:100%;height:100%;object-fit:cover}
+.preview-item .remove-media{position:absolute;top:5px;left:5px;width:27px;height:27px;border-radius:50%;background:#e53935;color:#fff;font-weight:bold}
+.detail-media{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:18px}
+.detail-media .media-main{grid-row:span 2;height:390px}
+.detail-media .media-thumb{height:190px}
+.detail-media img,.detail-media video{width:100%;height:100%;object-fit:cover;border-radius:12px;background:#111}
+.media-count{position:absolute;bottom:10px;right:10px;background:#000b;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px}
+.card-gallery{position:relative}
+.gallery-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.gallery-dot{width:7px;height:7px;border-radius:50%;background:#fff8}
+.gallery-dot.active{background:#fff}
+.inline-summary{margin-top:18px;background:#f7f8fa;border-radius:14px;padding:15px;color:var(--text)}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.profile-grid input{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;background:var(--card);color:var(--text)}
+.profile-save{margin-top:12px;background:var(--blue);color:#fff;padding:12px 20px;border-radius:9px}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.owner-actions button,.report-btn{padding:9px 12px;border-radius:9px;background:#eef2f7;color:#394150}
+.report-btn{color:#c62828;background:#fff0f0}
+.whatsapp{background:#20b858!important;color:#fff!important;padding:12px;border-radius:9px}
+.admin-list{display:grid;gap:10px}
+.report-card{border:1px solid var(--border);border-radius:12px;padding:14px;background:#fafafa;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.report-card button{padding:9px;border-radius:8px;background:#e53935;color:#fff}
+.seller-box{background:#f7f8fa;border-radius:14px;padding:14px;margin:14px 0;color:var(--text)}
+.view-count{color:var(--muted);font-size:13px;margin-top:4px}
+.date-badge{color:var(--muted);font-size:12px;margin-top:4px}
+@media(max-width:850px){.nav{display:none}.hero h1{font-size:27px}.body-grid{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.cars{grid-template-columns:1fr 1fr}.footer-inner{grid-template-columns:1fr}.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--card);z-index:900;box-shadow:0 -3px 15px #0002;justify-content:space-around}.bottom-nav button{background:var(--card);color:#697384;font-size:11px}.bottom-nav span{display:block;font-size:20px}.footer{padding-bottom:85px}}
+@media(max-width:520px){.body-grid{grid-template-columns:repeat(2,1fr)}.cars{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.detail-gallery{grid-template-columns:1fr 1fr}.detail-gallery img:first-child{grid-column:1/-1;grid-row:auto;height:220px}.detail-gallery img{height:110px}.details-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.detail-top{align-items:flex-start;flex-direction:column}.searchbox{flex-direction:column}.searchbtn{padding:13px}.preview-grid{grid-template-columns:repeat(3,1fr)}.detail-media{grid-template-columns:1fr 1fr}.detail-media .media-main{grid-column:1/-1;grid-row:auto;height:250px}.detail-media .media-thumb{height:120px}.profile-grid{grid-template-columns:1fr}.report-card{display:block}.report-card button{margin-top:8px}}
 </style>
 </head>
 <body>
-
-<header class="header">
-  <div class="topbar">
-    <div class="logo">مارکت <span>افغان</span></div>
-    <div class="nav">
-      <button>خرید موتر</button>
-      <button>فروش موتر</button>
-      <button id="darkBtn" class="dark-toggle">🌙 دارک</button>
-      <button class="lang">دری</button>
-    </div>
-  </div>
-  <div class="hero">
-    <h1>موتر رویایی خود را پیدا کنید</h1>
-    <p>بیش از ۱۵۰۰ موتر تایید شده در کابل، هرات و مزار</p>
-    <div class="searchbox">
-      <input id="searchInput" placeholder="مثلا تویوتا کرولا ۲۰۱۸">
-      <button class="searchbtn" onclick="doSearch()">جستجو</button>
-    </div>
-  </div>
+<header class="header" id="home">
+<div class="topbar">
+<div class="logo">🚘 مارکت <span>افغان</span></div>
+<nav class="nav">
+<button onclick="go('cars')">خرید موتر</button>
+<button onclick="openSell()">فروش موتر</button>
+<button onclick="showFavorites()">❤️ علاقه‌مندی‌ها</button>
+<button onclick="openProfile()">👤 پروفایل</button>
+<button onclick="openAdmin()">🛡️ مدیر</button>
+</nav>
+<div style="display:flex;gap:8px">
+<button class="dark-toggle" onclick="toggleDark()" title="تاریک/روشن">🌙</button>
+<button class="lang" onclick="toggleLanguage()">English</button>
+</div>
+</div>
+<div class="hero">
+<h1 id="heroTitle">موتر دلخواهت را پیدا کن</h1>
+<p id="heroText">خرید و فروش موتر در سراسر افغانستان</p>
+<div class="searchbox">
+<input id="search" placeholder="برند، مدل یا نسخه را جستجو کنید..." oninput="renderCars()">
+<button class="searchbtn" onclick="renderCars()">🔎 جستجو</button>
+</div>
+</div>
 </header>
 
-<div class="container">
-  <div class="section-title"><h2>بر اساس بدنه</h2></div>
-  <div class="body-grid">
-    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>سدان</div></div>
-    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>شاسی بلند</div></div>
-    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>پیکاپ</div></div>
-    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>هاچبک</div></div>
-    <div class="body-card"><img src="https://cdn-icons-png.flaticon.com/512/3774/3774083.png"><div>ون</div></div>
-  </div>
-
-  <div class="section-title"><h2>موترهای تازه</h2><button class="seeall">دیدن همه</button></div>
-  
-  <div class="filters">
-    <select id="brandFilter"><option value="">همه برندها</option><option>تویوتا</option><option>هیوندای</option><option>مرسدس</option></select>
-    <input id="yearFilter" type="number" placeholder="سال از ۲۰۱۵">
-    <input id="priceFilter" type="number" placeholder="قیمت تا">
-    <button class="filter-btn" onclick="doSearch()">اعمال فیلتر</button>
-  </div>
-
-  <div id="cars" class="cars" style="margin-top:20px"></div>
-
-  <div class="sell-section">
-    <div><h2>میخواهی موترت را بفروشی؟</h2><p>در ۳۰ دقیقه آگهی رایگان ثبت کن</p></div>
-    <button class="sell-btn">+ ثبت آگهی فروش</button>
-  </div>
+<main class="container">
+<div class="tabs">
+<button class="tab active" onclick="setCondition('')">همه</button>
+<button class="tab" onclick="setCondition('Used')">دست‌دوم</button>
+<button class="tab" onclick="setCondition('New')">نو</button>
+<button class="tab" onclick="setCondition('Certified')">تأییدشده</button>
+<button class="tab" onclick="setCondition('Export')">صادرات</button>
 </div>
 
-<footer class="footer"><div class="footer-inner"><div><h3>مارکت افغان</h3><p>بزرگترین بازار آنلاین موتر در افغانستان</p></div><div><h3>لینک ها</h3><p>درباره ما<br>تماس</p></div><div><h3>تماس</h3><p>کابل - افغانستان</p></div></div></footer>
+<div class="section-title"><h2>🚗 نوع موتر</h2></div>
+<div class="body-grid" id="bodyGrid"></div>
 
-<script>
-const allCars = [
-  {title:'تویوتا کرولا ۲۰۲۰', price:'$ 12,500', loc:'کابل', year:'۲۰۲۰ - ۸۵,۰۰۰ کیلومتر', fuel:'پطرول - اتومات', img:'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=600'},
-  {title:'هیوندای توسان ۲۰۱۹', price:'$ 18,900', loc:'هرات', year:'۲۰۱۹ - ۶۰,۰۰۰ کیلومتر', fuel:'دیزل - اتومات', img:'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=600'},
-  {title:'مرسدس بنز C200', price:'$ 22,000', loc:'مزار شریف', year:'۲۰۱۸ - ۴۵,۰۰۰ کیلومتر', fuel:'پطرول - اتومات', img:'https://images.unsplash.com/photo-1550355291-bbee04a92027?w=600'}
-];
+<div class="section-title"><h2>⭐ برندهای محبوب</h2><button class="seeall" onclick="clearMake()">همه برندها</button></div>
+<div class="make-row" id="makeRow"></div>
 
-function render(list){
-  const box = document.getElementById('cars');
-  if(!list.length){ box.innerHTML = '<div class="empty">موتر پیدا نشد</div>'; return; }
-  box.innerHTML = list.map(c=>`
-    <div class="card">
-      <div class="image-wrap">
-        <img class="car-img" src="${c.img}">
-        <div class="badges"><span class="badge certified">تایید شده</span></div>
-        <div class="card-tools"><span class="round">♡</span></div>
-      </div>
-      <div class="card-body">
-        <div class="car-title">${c.title}</div>
-        <div class="location">📍 ${c.loc}</div>
-        <div class="price">${c.price}</div>
-        <div class="specs"><span>📅 ${c.year}</span><span>⛽ ${c.fuel}</span></div>
-        <div class="actions"><button class="call">تماس</button><button class="visit">دیدن</button></div>
-      </div>
-    </div>
-  `).join('');
-}
+<div class="section-title" id="cars"><h2>🔎 فیلتر موترها</h2></div>
+<div class="filters">
+<select id="brand" onchange="renderCars()"><option value="">همه برندها</option></select>
+<select id="type" onchange="renderCars()"><option value="">همه نوع‌ها</option></select>
+<select id="fuel" onchange="renderCars()"><option value="">همه سوخت‌ها</option><option>بنزین</option><option>دیزل</option><option>هیبرید</option><option>برقی</option></select>
+<select id="gear" onchange="renderCars()"><option value="">همه گیربکس‌ها</option><option>اتومات</option><option>دستی</option></select>
+<select id="city" onchange="renderCars()"><option value="">همه شهرها</option><option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال‌آباد</option><option>شارجه</option><option>دبی</option></select>
+<select id="year" onchange="renderCars()"><option value="">همه سال‌ها</option><option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option></select>
+<input id="min" type="number" placeholder="حداقل قیمت" oninput="renderCars()">
+<input id="max" type="number" placeholder="حداکثر قیمت" oninput="renderCars()">
+<div class="sort-wrap" style="grid-column:1/-1;justify-content:flex-end">
+<label>مرتب‌سازی:</label>
+<select id="sort" onchange="renderCars()">
+<option value="newest">جدیدترین</option>
+<option value="priceAsc">ارزان‌ترین</option>
+<option value="priceDesc">گران‌ترین</option>
+<option value="kmAsc">کم‌کارکردترین</option>
+</select>
+</div>
+<button class="filter-btn" onclick="resetFilters()">پاک کردن فیلتر</button>
+</div>
 
-function doSearch(){
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const brand = document.getElementById('brandFilter').value.toLowerCase();
-  const filtered = allCars.filter(c => c.title.toLowerCase().includes(q) && c.title.toLowerCase().includes(brand));
-  render(filtered);
-}
+<div class="section-title"><h2>🚘 آخرین آگهی‌ها <span id="count"></span></h2></div>
+<div class="cars" id="carList"></div>
 
-document.getElementById('darkBtn').onclick = ()=>{
-  document.documentElement.classList.toggle('dark');
-  document.body.classList.toggle('dark');
-};
+<section class="sell-section">
+<div><h2>موترت را سریع بفروش</h2><p>آگهی خود را ثبت کن و موترت را به خریداران معرفی کن.</p></div>
+<button class="sell-btn" onclick="openSell()">➕ ثبت آگهی</button>
+</section>
+</main>
 
-render(allCars);
-</script>
+<footer class="footer"><div class="footer-inner"><div><h3>مارکت افغان</h3><p>پلتفرم خرید و فروش موتر در افغانستان.</p></div><div><h3>خرید موتر</h3><p>نو و دست‌دوم</p><p>آگهی‌های ویژه</p></div><div><h3>فروش موتر</h3><p>ثبت آگهی</p><p>آگهی‌های من</p></div></div></footer>
 
-</body>
-</html>
+<div class="bottom-nav">
+<button onclick="go('home')"><span>🏠</span>خانه</button>
+<button onclick="go('cars')"><span>🚘</span>خرید</button>
+<button onclick="openSell()"><span>➕</span>فروش</button>
+<button onclick="showFavorites()"><span>❤️</span>علاقه</button>
+<button onclick="openProfile()"><span>👤</span>پروفایل</button>
+</div>
+
+<div class="modal" id="detailModal"><div class="modal-box"><div class="modal-head"><h2 id="detailTitle">جزئیات موتر</h2><button class="close" onclick="closeModal('detailModal')">✕</button></div><div id="detailContent"></div></div></div>
+
+<div class="modal" id="sellModal"><div class="modal-box"><div class="modal-head"><h2>ثبت آگهی موتر</h2><button class="close" onclick="closeModal('sellModal')">✕</button></div>
+<form onsubmit="addCar(event)"><div class="form-grid">
+<div class="form-group"><label>برند</label><input id="nBrand" required></div>
+<div class="form-group"><label>مدل</label><input id="nModel" required></div>
+<div class="form-group"><label>سال</label><input id="nYear" type="number" required></div>
+<div class="form-group"><label>قیمت</label><input id="nPrice" type="number" required></div>
+<div class="form-group"><label>کیلومتر</label><input id="nKm" type="number" required></div>
+<div class="form-group"><label>نوع</label><select id="nType"></select></div>
+<div class="form-group"><label>سوخت</label><select id="nFuel"><option>بنزین</option><option>دیزل</option><option>هیبرید</option><option>برقی</option></select></div>
+<div class="form-group"><label>گیربکس</label><select id="nGear"><option>اتومات</option><option>دستی</option></select></div>
+<div class="form-group"><label>شهر</label><select id="nCity"><option>کابل</option>
