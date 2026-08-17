@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--blue:#0758b7;--dark:#172033;--muted:#7d8794;--green:#12a85b;--orange:#ffab00;--bg:#f5f6f8;--card:#fff;--text:#222;--border:#e6e8ec;--shadow:#00000008}
-.dark{--bg:#0f172a;--dark:#e2e8f0;--card:#1e293b;--text:#f1f5f9;--border:#334155;--shadow:#00000020}
+.dark{--bg:#0f172a;--dark:#f8fafc;--card:#1e293b;--text:#f1f5f9;--border:#334155;--shadow:#00000020;--muted:#94a3b8}
 body{font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--dark);transition:background .3s,color .3s}
 button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .header{background:linear-gradient(135deg,#07377f,#1268d1);color:#fff;padding:16px 4% 28px}
@@ -18,8 +18,8 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .lang{background:#fff!important;color:var(--blue)!important;padding:8px 14px;border-radius:20px}
 .dark-toggle{background:rgba(255,255,255,.2)!important;color:#fff!important;padding:8px 14px;border-radius:20px}
 .hero{padding-top:32px}.hero h1{font-size:36px;margin-bottom:8px}.hero p{opacity:.9;margin-bottom:22px}
-.searchbox{background:#fff;padding:10px;border-radius:17px;display:flex;box-shadow:0 10px 30px #0003;gap:8px}
-.searchbox input{flex:1;border:0;outline:0;padding:14px;font-size:16px;color:#222;background:transparent}
+.searchbox{background:var(--card);padding:10px;border-radius:17px;display:flex;box-shadow:0 10px 30px #0003;gap:8px}
+.searchbox input{flex:1;border:0;outline:0;padding:14px;font-size:16px;color:var(--text);background:transparent}
 .searchbtn{background:var(--orange);padding:0 25px;border-radius:11px;font-weight:bold;color:#111}
 .container{padding:0 15px;margin:28px auto}.section-title{display:flex;justify-content:space-between;align-items:center;margin:28px 0 16px;flex-wrap:wrap;gap:10px}
 .section-title h2{font-size:22px;color:var(--text)}.seeall{color:var(--blue);background:transparent;font-size:14px}
@@ -32,29 +32,28 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .body-card img{width:100%;height:75px;object-fit:contain}.body-card div{margin-top:8px;color:var(--muted);font-size:13px}
 .make-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}.make-card{min-width:145px}.make-card img{width:70px;height:55px;object-fit:contain}.make-card div{color:var(--muted);margin-top:5px;font-size:13px}
 .filters{background:var(--card);padding:15px;border-radius:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;box-shadow:0 3px 15px #00000009}
-.filters input,.filters select{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;outline:none;background:var(--card);color:var(--text)}
+.filters input,.filters select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;outline:none;background:var(--card);color:var(--text)}
 .filter-btn{background:var(--blue);color:#fff;border-radius:10px;font-weight:bold;padding:12px}
 .sort-wrap{display:flex;align-items:center;gap:8px}.sort-wrap label{color:var(--muted);font-size:13px}
 .cars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.card{background:var(--card);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px #0000000d;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px var(--shadow);cursor:pointer}
 .image-wrap{position:relative}.car-img{display:block;width:100%;height:220px;object-fit:cover;background:#111}
 .badges{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px}.badge{color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:bold}.featured{background:#c21865}.certified{background:#28a957}.inspected{background:#555}
-.card-tools{position:absolute;top:12px;left:12px;display:flex;gap:8px}.round{width:40px;height:40px;border-radius:50%;background:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
-.card-body{padding:15px}.price{font-size:23px;font-weight:900;margin:8px 0;color:var(--text)}.monthly{color:#e29a00;font-size:14px;margin-bottom:8px}.car-title{font-size:18px;font-weight:bold;color:var(--text)}.location{color:#9298a0;margin:8px 0;font-size:14px}
-.specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;color:#646b75;border-top:1px solid #eee;padding-top:12px;font-size:13px}
+.card-tools{position:absolute;top:12px;left:12px;display:flex;gap:8px}.round{width:40px;height:40px;border-radius:50%;background:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;color:#111}
+.card-body{padding:15px}.price{font-size:23px;font-weight:900;margin:8px 0;color:var(--text)}.monthly{color:#e29a00;font-size:14px;margin-bottom:8px}.car-title{font-size:18px;font-weight:bold;color:var(--text)}.location{color:var(--muted);margin:8px 0;font-size:14px}
+.specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;color:var(--muted);border-top:1px solid var(--border);padding-top:12px;font-size:13px}
 .actions{display:grid;grid-template-columns:1fr 1.3fr;gap:8px;margin-top:14px}.call{background:var(--blue);color:#fff;padding:12px;border-radius:9px}.visit{background:#ff9f00;color:#fff;padding:12px;border-radius:9px}
 .empty{background:var(--card);padding:35px;text-align:center;border-radius:15px;grid-column:1/-1;color:var(--text)}
 .sell-section{margin-top:38px;background:linear-gradient(135deg,#062f72,#0870d8);color:#fff;border-radius:22px;padding:32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.sell-btn{background:#ffc21c;color:#111;padding:14px 24px;border-radius:10px;font-weight:bold}
 .footer{background:#111827;color:#cbd5e1;margin-top:45px;padding:38px 5%}.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footer h3{color:#fff;margin-bottom:10px}.footer p{line-height:2}
 .bottom-nav{display:none}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:1000;padding:15px;overflow:auto}.modal-box{background:var(--card);max-width:900px;margin:25px auto;border-radius:22px;padding:20px;color:var(--text)}.close{background:#eee;border-radius:50%;width:38px;height:38px;color:#333}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.detail-gallery{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}.detail-gallery img{width:100%;height:180px;object-fit:cover;border-radius:10px}.detail-gallery img:first-child{grid-row:span 2;height:368px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:1000;padding:15px;overflow:auto}.modal-box{background:var(--card);max-width:900px;margin:25px auto;border-radius:22px;padding:20px;color:var(--text)}.close{background:var(--border);border-radius:50%;width:38px;height:38px;color:var(--text)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .detail-top{display:flex;justify-content:space-between;gap:15px;align-items:center;margin:18px 0;flex-wrap:wrap}.detail-price{font-size:28px;font-weight:900;color:var(--text)}.detail-actions{display:flex;gap:8px;flex-wrap:wrap}.detail-actions button{padding:12px 18px;border-radius:9px}
-.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.detail-item{background:var(--card);border-radius:13px;padding:15px;box-shadow:0 3px 14px #00000010;border:1px solid var(--border)}.detail-item .label{color:#9aa0a8;font-size:13px;margin-bottom:8px}.detail-item .value{font-weight:600;color:var(--text)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-group label{display:block;font-size:13px;margin-bottom:6px;color:var(--text)}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;background:var(--card);color:var(--text)}.form-group textarea{height:90px}.full{grid-column:1/-1}.submit{width:100%;background:var(--blue);color:#fff;padding:14px;border-radius:10px;font-weight:bold}
+.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.detail-item{background:var(--card);border-radius:13px;padding:15px;box-shadow:0 3px 14px var(--shadow);border:1px solid var(--border)}.detail-item .label{color:var(--muted);font-size:13px;margin-bottom:8px}.detail-item .value{font-weight:600;color:var(--text)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-group label{display:block;font-size:13px;margin-bottom:6px;color:var(--text)}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text)}.form-group textarea{height:90px}.full{grid-column:1/-1}.submit{width:100%;background:var(--blue);color:#fff;padding:14px;border-radius:10px;font-weight:bold}
 .toast{position:fixed;bottom:80px;right:20px;background:#111827;color:#fff;padding:13px 18px;border-radius:10px;display:none;z-index:2000}
-.media-input{border:2px dashed #b8c0cc!important;background:#f8fafc!important;padding:18px!important}
-.media-help{font-size:12px;color:#7b8490;margin-top:6px;line-height:1.8}
+.media-input{border:2px dashed var(--border)!important;background:var(--card)!important;padding:18px!important}
+.media-help{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.8}
 .preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
 .preview-item{position:relative;border-radius:10px;overflow:hidden;background:#111;aspect-ratio:1/1}
 .preview-item img,.preview-item video{width:100%;height:100%;object-fit:cover}
@@ -64,26 +63,21 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 .detail-media .media-thumb{height:190px}
 .detail-media img,.detail-media video{width:100%;height:100%;object-fit:cover;border-radius:12px;background:#111}
 .media-count{position:absolute;bottom:10px;right:10px;background:#000b;color:#fff;padding:6px 10px;border-radius:20px;font-size:12px}
-.card-gallery{position:relative}
-.gallery-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
-.gallery-dot{width:7px;height:7px;border-radius:50%;background:#fff8}
-.gallery-dot.active{background:#fff}
-.inline-summary{margin-top:18px;background:#f7f8fa;border-radius:14px;padding:15px;color:var(--text)}
+.inline-summary{margin-top:18px;background:var(--bg);border-radius:14px;padding:15px;color:var(--text)}
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.profile-grid input{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;background:var(--card);color:var(--text)}
+.profile-grid input{width:100%;padding:12px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text)}
 .profile-save{margin-top:12px;background:var(--blue);color:#fff;padding:12px 20px;border-radius:9px}
 .owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.owner-actions button,.report-btn{padding:9px 12px;border-radius:9px;background:#eef2f7;color:#394150}
+.owner-actions button,.report-btn{padding:9px 12px;border-radius:9px;background:var(--bg);color:var(--text)}
 .report-btn{color:#c62828;background:#fff0f0}
 .whatsapp{background:#20b858!important;color:#fff!important;padding:12px;border-radius:9px}
 .admin-list{display:grid;gap:10px}
-.report-card{border:1px solid var(--border);border-radius:12px;padding:14px;background:#fafafa;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.report-card{border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--card);display:flex;justify-content:space-between;gap:10px;align-items:center}
 .report-card button{padding:9px;border-radius:8px;background:#e53935;color:#fff}
-.seller-box{background:#f7f8fa;border-radius:14px;padding:14px;margin:14px 0;color:var(--text)}
-.view-count{color:var(--muted);font-size:13px;margin-top:4px}
+.seller-box{background:var(--bg);border-radius:14px;padding:14px;margin:14px 0;color:var(--text)}
 .date-badge{color:var(--muted);font-size:12px;margin-top:4px}
-@media(max-width:850px){.nav{display:none}.hero h1{font-size:27px}.body-grid{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.cars{grid-template-columns:1fr 1fr}.footer-inner{grid-template-columns:1fr}.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--card);z-index:900;box-shadow:0 -3px 15px #0002;justify-content:space-around}.bottom-nav button{background:var(--card);color:#697384;font-size:11px}.bottom-nav span{display:block;font-size:20px}.footer{padding-bottom:85px}}
-@media(max-width:520px){.body-grid{grid-template-columns:repeat(2,1fr)}.cars{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.detail-gallery{grid-template-columns:1fr 1fr}.detail-gallery img:first-child{grid-column:1/-1;grid-row:auto;height:220px}.detail-gallery img{height:110px}.details-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.detail-top{align-items:flex-start;flex-direction:column}.searchbox{flex-direction:column}.searchbtn{padding:13px}.preview-grid{grid-template-columns:repeat(3,1fr)}.detail-media{grid-template-columns:1fr 1fr}.detail-media .media-main{grid-column:1/-1;grid-row:auto;height:250px}.detail-media .media-thumb{height:120px}.profile-grid{grid-template-columns:1fr}.report-card{display:block}.report-card button{margin-top:8px}}
+@media(max-width:850px){.nav{display:none}.hero h1{font-size:27px}.body-grid{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.cars{grid-template-columns:1fr 1fr}.footer-inner{grid-template-columns:1fr}.bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--card);z-index:900;box-shadow:0 -3px 15px #0002;justify-content:space-around}.bottom-nav button{background:var(--card);color:var(--muted);font-size:11px}.bottom-nav span{display:block;font-size:20px}.footer{padding-bottom:85px}}
+@media(max-width:520px){.body-grid{grid-template-columns:repeat(2,1fr)}.cars{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.details-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.detail-top{align-items:flex-start;flex-direction:column}.searchbox{flex-direction:column}.searchbtn{padding:13px}.preview-grid{grid-template-columns:repeat(3,1fr)}.detail-media{grid-template-columns:1fr 1fr}.detail-media .media-main{grid-column:1/-1;grid-row:auto;height:250px}.detail-media .media-thumb{height:120px}.profile-grid{grid-template-columns:1fr}.report-card{display:block}.report-card button{margin-top:8px}}
 </style>
 </head>
 <body>
@@ -180,13 +174,12 @@ button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}
 <div class="form-group"><label>نوع</label><select id="nType"></select></div>
 <div class="form-group"><label>سوخت</label><select id="nFuel"><option>بنزین</option><option>دیزل</option><option>هیبرید</option><option>برقی</option></select></div>
 <div class="form-group"><label>گیربکس</label><select id="nGear"><option>اتومات</option><option>دستی</option></select></div>
-<div class="form-group"><label>شهر</label><select id="nCity"><option>کابل</option>
-option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال‌آباد</option></select></div>
+<div class="form-group"><label>شهر</label><select id="nCity"><option>کابل</option><option>هرات</option><option>مزار شریف</option><option>قندهار</option><option>جلال‌آباد</option></select></div>
 <div class="form-group"><label>شماره تماس</label><input id="nPhone" required></div>
 <div class="form-group full">
 <label>📷 عکس و 🎥 ویدیوهای موتر</label>
 <input id="nMedia" class="media-input" type="file" accept="image/*,video/*" multiple onchange="previewMedia(event)">
-<div class="media-help">هر تعداد عکس و ویدیو که لازم داری انتخاب کن. خریدار همه رسانه‌ها را داخل خود آگهی می‌بیند.</div>
+<div class="media-help">عکس و ویدیوهای کم‌حجم انتخاب کنید تا ذخیره شوند.</div>
 <div id="mediaPreview" class="preview-grid"></div>
 </div>
 <div class="form-group full"><label>توضیحات</label><textarea id="nDesc"></textarea></div>
@@ -369,8 +362,7 @@ function openDetails(id){
  <div class="seller-box"><b>👤 فروشنده:</b> ${escapeHtml(c.sellerName||"فروشنده")} &nbsp; | &nbsp; 📍 ${escapeHtml(c.sellerCity||c.city)}</div>
  <div class="owner-actions">${c.ownerId===profile.id?`<button onclick="deleteCar(${c.id})">🗑️ حذف آگهی من</button>`:""}<button class="report-btn" onclick="reportCar(${c.id})">🚩 گزارش آگهی</button></div>
  <div class="details-grid">${fields.map(f=>`<div class="detail-item"><div class="label">${f[0]}</div><div class="value">${escapeHtml(String(f[1]))}</div></div>`).join("")}</div>
- <div class="inline-summary"><h3>📝 توضیحات فروشنده</h3><p style="line-height:2;color:#555">${c.description?escapeHtml(c.description):"توضیحات اضافی برای این آگهی ثبت نشده است."}</p></div>
- <div class="inline-summary"><h3>📌 اطلاعات مهم</h3><p style="line-height:2;color:#555">همه عکس‌ها، ویدیوها و مشخصات این موتر همین‌جا نمایش داده می‌شود؛ برای دیدن جزئیات نیازی به باز کردن سایت دیگری نیست.</p></div>`;
+ <div class="inline-summary"><h3>📝 توضیحات فروشنده</h3><p style="line-height:2;color:var(--muted)">${c.description?escapeHtml(c.description):"توضیحات اضافی برای این آگهی ثبت نشده است."}</p></div>`;
  document.getElementById("detailModal").style.display="block";
  document.body.style.overflow="hidden";
 }
@@ -403,7 +395,7 @@ function saveLocalCars(){
  try{
    localStorage.setItem("afghanCars",JSON.stringify(cars.filter(c=>c.ownerId===profile.id&&c.ownerId!=="demo")));
  }catch(e){
-   toast("⚠️ حافظه مرورگر پر شده. لطفاً آگهی‌های قدیمی را حذف کنید.");
+   toast("⚠️ حافظه مرورگر پر شده است.");
  }
 }
 function deleteCar(id){
@@ -420,16 +412,16 @@ function deleteCar(id){
 }
 function reportCar(id){
  const c=cars.find(x=>x.id===id);if(!c)return;
- const reason=prompt("دلیل گزارش را بنویسید:\nمحتوای غیر اخلاقی / غیرمرتبط با موتر / کلاهبرداری / اطلاعات نادرست");
+ const reason=prompt("دلیل گزارش را بنویسید:\nمحتوای غیر اخلاقی / کلاهبرداری / اطلاعات نادرست");
  if(!reason)return;
  reports.push({id:Date.now(),carId:id,reason:escapeHtml(reason),created:new Date().toLocaleString("fa-AF")});
  localStorage.setItem("afghanReports",JSON.stringify(reports));
  toast("🚩 گزارش برای مدیر ارسال شد");
 }
 function openAdmin(){
- const pass=prompt("رمز مدیر را وارد کنید:");
+ const pass=prompt("رمز مدیر را وارد کنید (1234):");
  if(!pass)return;
- if(btoa(pass)!=="MTIzNA=="){toast("رمز مدیر نادرست است");return;}
+ if(pass!=="1234"){toast("رمز مدیر نادرست است");return;}
  renderReports();
  document.getElementById("adminModal").style.display="block";
  document.body.style.overflow="hidden";
@@ -477,7 +469,7 @@ function clearMake(){make="";document.getElementById("brand").value="";renderCar
 function setCondition(c){
  condition=c;
  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
- if(event&&event.currentTarget)event.currentTarget.classList.add("active");
+ if(window.event&&window.event.currentTarget)window.event.currentTarget.classList.add("active");
  renderCars();
 }
 function resetFilters(){
@@ -525,11 +517,11 @@ async function addCar(e){
    media:media,images:media.filter(x=>x.type==="image").map(x=>x.src),views:0,created:now
  };
  cars.unshift(c);
- try{saveLocalCars();}catch(err){toast("⚠️ آگهی ثبت شد، اما ذخیره‌سازی با مشکل مواجه شد.");}
+ try{saveLocalCars();}catch(err){toast("⚠️ آگهی ثبت شد، اما ذخیره‌سازی کامل انجام نشد.");}
  closeModal("sellModal"); e.target.reset();
  document.getElementById("mediaPreview").innerHTML="";
  renderCars();
- toast("✅ آگهی با عکس و ویدیو ثبت شد");
+ toast("✅ آگهی ثبت شد");
 }
 function toast(t){
  const x=document.getElementById("toast");
